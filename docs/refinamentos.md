@@ -1,6 +1,6 @@
 # Registro de refinamentos da especificação
 
-Mantenho este registro de refinamentos. Versão atual: 1.0.0, de 05/09/2026.
+Mantenho este registro de refinamentos. Versão atual: 1.1.0, de 05/09/2026.
 
 ## Estado da revisão
 
@@ -9,8 +9,8 @@ Revisão por Felipe e Caike: **pendente**. Testes da API e revisão de integraç
 da [Issue #9](https://github.com/gabrielavieirab/tarefas-api/issues/9): **pendentes
 das contribuições de implementação, ambiente e testes**.
 
-Os registros abaixo são refinamentos da análise documental inicial. Não representam
-comentários, aprovações ou testes realizados por colegas.
+Os registros abaixo documentam a análise inicial e a evolução da minha proposta.
+Não representam comentários, aprovações ou testes realizados por colegas.
 
 ## 05/09/2026 - Versão 1.0.0: definição inicial
 
@@ -39,6 +39,27 @@ de inexistente e proíbe corpo no `204`. Impacto: contratos e CA-16 a CA-22/CA-2
 **REF-05 - Definir leitura e persistência.** A proposta determina ordem por ID,
 arquivo preservado entre reinicializações e banco isolado para testes.
 Impacto: RF-02/RF-07, RN-10/RN-11 e CA-09 a CA-11/CA-23/CA-24.
+
+## 05/09/2026 - Versão 1.1.0: edição do texto da tarefa
+
+**REF-06 - Permitir corrigir ou substituir o texto.** Identifiquei a necessidade
+de alterar uma tarefa já cadastrada, por exemplo corrigir `Estudar matematca` para
+`Estudar matemática` ou trocar a atividade por `Revisar português`.
+
+Na versão 1.0.0, o PATCH aceitava apenas conclusão. Atualizei a proposta para
+aceitar `titulo`, `concluida: true` ou ambos, com pelo menos um campo. A edição
+preserva ID e campos omitidos, inclusive o estado concluído, e usa a validação de
+título do cadastro. Um campo inválido impede toda a alteração. Permanecem quatro
+operações HTTP, três campos e uma tabela.
+
+**Impacto:** RF-07/RF-08, RN-02/RN-05/RN-12, contrato OpenAPI, ADR-003,
+`TarefaAtualizar`, `atualizar_tarefa`, CA-15/CA-17/CA-23 e novos CA-27 a CA-31.
+Felipe precisa considerar a edição na implementação e Caike nos testes;
+Gabriela usará a versão revisada ao consolidar as instruções e a documentação.
+
+**Situação:** proposta para revisão no
+[PR #12](https://github.com/gabrielavieirab/tarefas-api/pull/12), vinculada à Issue #1.
+Registrarei o feedback e a aprovação quando ocorrerem.
 
 ## Como registrar os próximos ajustes
 

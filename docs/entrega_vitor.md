@@ -18,9 +18,13 @@ Nesta contribuição, preparei a especificação e as decisões técnicas da
 
 Todos os documentos descrevem a proposta técnica, sujeita à revisão dos colegas.
 O OpenAPI é um contrato estático elaborado antes da implementação; depois, a
-documentação gerada pelo FastAPI deve ser conferida contra ele. No título de
-cadastro, o contrato permite espaços nas extremidades e limita o conteúdo após
-normalização; essa transformação precisa ser refletida na validação da aplicação.
+documentação gerada pelo FastAPI deve ser conferida contra ele. No cadastro e na
+edição, o contrato permite espaços nas extremidades do título e limita o conteúdo
+após normalização; essa transformação precisa ser refletida na validação da aplicação.
+
+Na versão 1.1.0, incluí a edição do texto da tarefa no PATCH, com preservação de ID
+e campos omitidos. Mantive quatro operações HTTP e acrescentei cinco cenários,
+totalizando 31 critérios de aceitação.
 
 ## Como as responsabilidades se conectam
 
@@ -30,8 +34,8 @@ do uso real da ferramenta. A seção adicionada ao README dá acesso à parte t�
 os comandos e as evidências serão complementados nas tarefas correspondentes.
 
 **Felipe** implementa os componentes e as quatro rotas com base nos contratos.
-Deve revisar principalmente corpo do PATCH, normalização do título, persistência,
-campos extras e os códigos HTTP antes da implementação.
+Deve revisar principalmente edição parcial no PATCH, normalização do título,
+persistência, campos extras e os códigos HTTP antes da implementação.
 
 **Caike** prepara dependências, container, testes e CI. Usa os critérios de aceitação
 e valida o isolamento do banco. A escolha de Python 3.12 e o comando de instalação
@@ -51,9 +55,11 @@ python -m openapi_spec_validator docs/openapi.json
 docs/openapi.json: OK
 ```
 
-Em uma checagem local complementar dos esquemas, conferi 31 exemplos válidos e
-inválidos de cadastro/conclusão, os oito exemplos embutidos no OpenAPI, a ausência
-de conteúdo no `204`, as quatro operações e os links internos dos documentos.
+Na versão 1.1.0, conferi 75 exemplos válidos e inválidos dos esquemas de cadastro
+e atualização, incluindo edição isolada, conclusão isolada, edição e conclusão
+juntas, campos omitidos, `null`, limites do título e campos extras. Conferi também
+os 12 exemplos embutidos no OpenAPI, a ausência de conteúdo no `204`, as quatro
+operações e os 12 links internos dos documentos.
 São verificações do contrato estático, não testes HTTP de uma aplicação implementada.
 Instalei as ferramentas de validação em ambiente temporário separado,
 sem definir as dependências da aplicação que Caike vai preparar.

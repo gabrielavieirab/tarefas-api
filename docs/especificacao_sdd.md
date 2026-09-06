@@ -2,7 +2,7 @@
 
 Eu, Vitor (@vitorborges10), sou o responsável por esta especificação.
 
-**Versão:** 1.0.0. **Data:** 05/09/2026.
+**Versão:** 1.1.0. **Data:** 05/09/2026.
 
 **Estado:** proposta técnica pronta para revisão por Felipe e Caike.
 
@@ -11,7 +11,8 @@ Eu, Vitor (@vitorborges10), sou o responsável por esta especificação.
 ## 1. Problema e objetivo
 
 Uma pessoa precisa registrar pequenas atividades, consultar o que foi cadastrado,
-identificar atividades concluídas e remover registros que não deseja manter.
+editar o texto de uma tarefa, identificar atividades concluídas e remover registros
+que não deseja manter.
 Anotações dispersas dificultam manter uma lista com estado consistente.
 
 A solução é uma API HTTP que centraliza essa lista e persiste os registros entre
@@ -24,12 +25,14 @@ antes de orientar a geração de código, a implementação e os testes.
 
 ## 2. Escopo da entrega inicial
 
-Inclui exatamente quatro operações de negócio: cadastrar, listar, concluir e
-excluir tarefas. Cada tarefa tem `id`, `titulo` e `concluida`, em uma única tabela.
+Inclui exatamente quatro operações HTTP: cadastrar, listar, atualizar e excluir
+tarefas. A atualização permite editar o texto (`titulo`), marcar como concluída
+ou fazer ambas as alterações na mesma requisição. Cada tarefa tem `id`, `titulo`
+e `concluida`, em uma única tabela.
 Todas as tarefas pertencem à mesma lista compartilhada; não há conceito de usuário.
 
 Não fazem parte desta versão: interface própria, autenticação, usuários, categorias,
-prioridades, datas, paginação, filtros, edição de título, reabertura de tarefa,
+prioridades, datas, paginação, filtros, reabertura de tarefa,
 consulta individual por GET, relacionamentos e cálculos. A página de documentação
 automática do FastAPI é uma ferramenta de apoio, não uma quinta operação de negócio.
 
@@ -67,8 +70,11 @@ As justificativas e a decomposição dos componentes estão em
   validação, sem alterar dados.
 - **RF-06 - Informar ausência:** para um ID válido sem registro correspondente,
   PATCH e DELETE retornam HTTP `404` e a mensagem definida no contrato.
-- **RF-07 - Persistir:** cadastros, conclusões e exclusões confirmados devem
+- **RF-07 - Persistir:** cadastros, edições, conclusões e exclusões confirmados devem
   continuar refletidos após reiniciar a aplicação com o mesmo arquivo de banco.
+- **RF-08 - Editar:** receber um novo `titulo` válido em PATCH, atualizar o texto
+  da tarefa existente e retornar sua representação com HTTP `200`. Preservar o ID
+  e os campos omitidos; editar o texto de uma tarefa concluída não a reabre.
 
 ## 5. Requisitos não funcionais
 
@@ -84,7 +90,7 @@ As justificativas e a decomposição dos componentes estão em
 - **RNF-04 - Manutenção:** separar validação/serialização, rotas, persistência e
   configuração de banco em módulos pequenos, sem frameworks arquiteturais extras.
 - **RNF-05 - Integridade:** confirmar alterações no banco antes de responder
-  sucesso; falhas de validação não podem criar, concluir ou excluir registros.
+  sucesso; falhas de validação não podem criar, editar, concluir ou excluir registros.
 - **RNF-06 - Rastreabilidade:** associar a implementação aos RFs e aos critérios
   de aceitação; registrar decisões, revisões reais e mudanças da especificação.
 - **RNF-07 - Documentação verificável:** o contrato e a documentação automática
@@ -115,17 +121,22 @@ A validação do limite do título é responsabilidade da aplicação: declarar 
 ## 7. Regras de negócio e validação
 
 - **RN-01:** toda tarefa nasce pendente (`concluida=false`).
-- **RN-02:** o título deve ser uma string JSON. Ausência, `null`, número,
-  booleano, objeto, lista, string vazia e texto composto só por espaços são inválidos.
+- **RN-02:** o título deve ser uma string JSON. `null`, número, booleano, objeto,
+  lista, string vazia e texto composto só por espaços são inválidos. O campo é
+  obrigatório no POST; no PATCH, sua ausência mantém o título atual.
 - **RN-03:** remover espaços em branco das extremidades antes de verificar o
-  limite de 1 a 120 caracteres. Títulos iguais são permitidos e geram tarefas distintas.
+  limite de 1 a 120 caracteres. Títulos iguais são permitidos; no cadastro,
+  geram tarefas distintas, enquanto a edição mantém o ID da tarefa alterada.
 - **RN-04:** POST aceita apenas `titulo`. Campos extras, inclusive `id` e
   `concluida`, retornam `422`, evitando sobrescrita de campos controlados pelo servidor.
-- **RN-05:** PATCH exige corpo JSON com somente `concluida`, cujo valor deve ser
-  o booleano `true`. `false`, `1`, `"true"`, `null`, campo ausente e campos extras
-  são inválidos. Não há edição de título ou reabertura nesta versão.
-- **RN-06:** concluir novamente uma tarefa concluída retorna `200` e a mesma
-  representação, mantendo ID e título. É uma operação idempotente quanto ao estado.
+- **RN-05:** PATCH exige corpo JSON com pelo menos um dos campos `titulo` e
+  `concluida`. Aceitar um ou ambos. Quando presente, `titulo` segue RN-02/RN-03;
+  `concluida` aceita somente o booleano `true`, rejeitando `false`, `1`, `"true"`
+  e `null`. Corpo vazio `{}`, corpo ausente e campos extras, inclusive `id`,
+  retornam `422`. Não há reabertura nesta versão.
+- **RN-06:** enviar apenas `{"concluida":true}` para uma tarefa já concluída retorna
+  `200` e a mesma representação, mantendo ID e título. É uma operação idempotente
+  quanto ao estado.
 - **RN-07:** excluir remove o registro da lista e do banco. Uma nova exclusão do
   mesmo ID, ainda ausente, retorna `404`.
 - **RN-08:** o ID da rota deve representar um inteiro positivo dentro do limite
@@ -139,6 +150,12 @@ A validação do limite do título é responsabilidade da aplicação: declarar 
 - **RN-11:** o arquivo SQLite deve ser reutilizado entre reinicializações. Testes
   não devem abrir ou apagar esse arquivo. No Docker, montar um volume no diretório
   de dados para preservar os registros ao recriar o container.
+- **RN-12:** PATCH altera apenas os campos enviados e mantém o ID. Editar somente
+  o título preserva o estado pendente ou concluído; concluir sem enviar título
+  preserva o texto. A edição pode corrigir uma palavra ou substituir todo o texto.
+  Validar todos os campos antes de salvar; se um for inválido, nenhum é alterado.
+  Repetir a mesma atualização válida, sem mudanças intermediárias, retorna `200`
+  e mantém os mesmos dados. A edição não cria outra tarefa nem altera outras linhas.
 
 ## 8. Contratos HTTP
 
@@ -180,7 +197,25 @@ Sem registros, a resposta é `200 OK` com `[]`, não `404`.
 
 ### PATCH /tarefas/{id}
 
-Exemplo: `PATCH /tarefas/1`. Corpo obrigatório, `Content-Type: application/json`:
+Exemplo: `PATCH /tarefas/1`. Corpo obrigatório, `Content-Type: application/json`.
+Enviar pelo menos um dos campos aceitos.
+
+**Editar o texto:** para trocar `Estudar matematca` por `Estudar matemática`:
+
+```json
+{"titulo": "Estudar matemática"}
+```
+
+Resposta `200 OK`, supondo que a tarefa estava pendente:
+
+```json
+{"id": 1, "titulo": "Estudar matemática", "concluida": false}
+```
+
+O novo texto também pode descrever outra atividade, como `Revisar português`.
+Se a tarefa já estava concluída, editar só o título mantém `concluida=true`.
+
+**Marcar como concluída**, preservando o título atual:
 
 ```json
 {"concluida": true}
@@ -189,11 +224,25 @@ Exemplo: `PATCH /tarefas/1`. Corpo obrigatório, `Content-Type: application/json
 Resposta `200 OK`:
 
 ```json
-{"id": 1, "titulo": "Estudar para o bootcamp", "concluida": true}
+{"id": 1, "titulo": "Estudar matemática", "concluida": true}
 ```
 
-Repetir uma requisição válida retorna `200` com os mesmos dados. ID válido
-inexistente retorna `404`; ID ou corpo inválido retorna `422`.
+**Editar e concluir na mesma requisição:**
+
+```json
+{"titulo": "Revisar português", "concluida": true}
+```
+
+Resposta `200 OK`:
+
+```json
+{"id": 1, "titulo": "Revisar português", "concluida": true}
+```
+
+O GET posterior deve refletir as alterações persistidas. Repetir uma requisição
+válida, sem alterações intermediárias, retorna `200` com os mesmos dados.
+ID válido inexistente retorna `404`; ID ou corpo inválido retorna `422`.
+Por exemplo, `{"titulo":"","concluida":true}` retorna `422` sem editar nem concluir.
 
 ### DELETE /tarefas/{id}
 

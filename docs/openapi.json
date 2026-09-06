@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "API de lista de tarefas - contrato da entrega inicial",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Preparei esta proposta técnica para revisão na Issue #1. Contrato estático; não é evidência de uma API em execução. Quatro operações, uma tabela e três campos. Regras e critérios complementares em docs/especificacao_sdd.md e docs/criterios_aceitacao.md."
   },
   "servers": [
@@ -106,34 +106,73 @@
         "tags": [
           "Tarefas"
         ],
-        "operationId": "concluirTarefa",
-        "summary": "Marcar uma tarefa como concluída",
-        "description": "Exige somente o booleano true em concluida. Não permite reabertura nem edição de título. Repetir a conclusão válida retorna 200 com a mesma representação. Validar a entrada antes de consultar a existência do registro.",
+        "operationId": "atualizarTarefa",
+        "summary": "Editar o texto e/ou concluir uma tarefa",
+        "description": "Exige pelo menos um dos campos titulo e concluida. Aceita titulo válido, concluida com o booleano true ou ambos. Preserva ID e campos omitidos; editar o texto não reabre uma tarefa concluída. Rejeita null, corpo vazio, campos extras e reabertura. Valida toda a entrada antes de consultar e salvar; um campo inválido impede qualquer alteração. Repetir uma atualização válida, sem alterações intermediárias, retorna 200 com os mesmos dados.",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TarefaConcluir"
+                "$ref": "#/components/schemas/TarefaAtualizar"
               },
-              "example": {
-                "concluida": true
+              "examples": {
+                "editar": {
+                  "summary": "Corrigir ou substituir o texto",
+                  "value": {
+                    "titulo": "Estudar matemática"
+                  }
+                },
+                "concluir": {
+                  "summary": "Concluir preservando o texto",
+                  "value": {
+                    "concluida": true
+                  }
+                },
+                "editarEConcluir": {
+                  "summary": "Editar e concluir juntos",
+                  "value": {
+                    "titulo": "Revisar português",
+                    "concluida": true
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Tarefa concluída e persistida, inclusive em repetição.",
+            "description": "Tarefa atualizada e persistida; ID e campos omitidos preservados.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/TarefaRead"
                 },
-                "example": {
-                  "id": 1,
-                  "titulo": "Estudar para o bootcamp",
-                  "concluida": true
+                "examples": {
+                  "editar": {
+                    "summary": "Texto editado em tarefa pendente",
+                    "value": {
+                      "id": 1,
+                      "titulo": "Estudar matemática",
+                      "concluida": false
+                    }
+                  },
+                  "concluir": {
+                    "summary": "Tarefa concluída",
+                    "value": {
+                      "id": 1,
+                      "titulo": "Estudar matemática",
+                      "concluida": true
+                    }
+                  },
+                  "editarEConcluir": {
+                    "summary": "Texto e estado atualizados",
+                    "value": {
+                      "id": 1,
+                      "titulo": "Revisar português",
+                      "concluida": true
+                    }
+                  }
                 }
               }
             }
@@ -205,13 +244,24 @@
           }
         }
       },
-      "TarefaConcluir": {
+      "TarefaAtualizar": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "concluida"
-        ],
+        "minProperties": 1,
+        "description": "Enviar titulo, concluida ou ambos. Campos omitidos são preservados; null explícito é inválido.",
         "properties": {
+          "titulo": {
+            "type": "string",
+            "description": "Remover espaços em branco das extremidades antes de persistir e validar 1 a 120 caracteres Unicode. O padrão permite espaços externos; não usar maxLength=120 no texto bruto, pois espaços externos não entram no limite.",
+            "pattern": "^\\s*\\S(?:[\\s\\S]{0,118}\\S)?\\s*$",
+            "x-normalization": "strip",
+            "x-normalized-minLength": 1,
+            "x-normalized-maxLength": 120,
+            "examples": [
+              "Estudar para o bootcamp",
+              "  Revisar API  "
+            ]
+          },
           "concluida": {
             "type": "boolean",
             "const": true,

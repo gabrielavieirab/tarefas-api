@@ -1,6 +1,8 @@
 # tarefas-api
 
-API de lista de tarefas com cadastro, listagem, conclusão e exclusão.
+API de lista de tarefas com cadastro, listagem, edição do texto, conclusão e exclusão.
+O `PATCH /tarefas/{id}` permite editar `titulo`, enviar `concluida: true` ou ambos,
+preservando o ID e os campos omitidos. O projeto mantém quatro operações HTTP.
 
 ## Especificação e decisões técnicas
 

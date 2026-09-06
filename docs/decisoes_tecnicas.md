@@ -63,7 +63,8 @@ Fonte: [usos adequados do SQLite](https://www.sqlite.org/whentouse.html) e
 **Contexto.** As rotas e campos já estão acordados; ainda faltava eliminar
 ambiguidades que poderiam gerar implementações e testes incompatíveis.
 
-**Decisão.** POST recebe apenas `titulo`; PATCH exige `{"concluida": true}`;
+**Decisão.** POST recebe apenas `titulo`; PATCH recebe `titulo`, `concluida: true`
+ou ambos, exigindo pelo menos um campo e preservando os campos omitidos;
 DELETE retorna `204` sem corpo. Usar `422` para validação e `404` para registro
 inexistente com entrada válida. Listar por ID crescente. Normalizar extremidades
 do título, com limite de 120 caracteres após normalização. Permitir títulos iguais.
@@ -71,12 +72,17 @@ do título, com limite de 120 caracteres após normalização. Permitir títulos
 **Justificativa.** Um limite curto é suficiente para nomear uma tarefa e fácil de
 testar. PATCH explícito evita que um corpo vazio produza uma mudança de estado por
 engano. Aceitar só `true` mantém o escopo de conclusão, sem introduzir reabertura.
+Reutilizar o PATCH para editar o texto permite corrigir digitação ou mudar a
+atividade sem excluir e cadastrar outra tarefa, sem acrescentar rotas ou tabelas.
 Campos extras rejeitados tornam erros de integração visíveis.
 
 **Consequências.** É preciso validar o tipo booleano estritamente: valores como
 `1` ou `"true"` não podem ser convertidos silenciosamente. Recomenda-se `StrictBool`
 com validação de valor verdadeiro; uma checagem de igualdade simples com `True`
-não é suficiente em Python. Para o título, normalizar antes de verificar o tamanho.
+não é suficiente em Python. Para o título, normalizar antes de verificar o tamanho,
+reutilizando a mesma regra em POST e PATCH. No PATCH, distinguir campo omitido de
+`null` explícito; rejeitar `null` e corpo vazio. Aplicar apenas campos enviados
+(por exemplo, com `model_dump(exclude_unset=True)`), depois de validar o corpo todo.
 Essas regras são escolhas do projeto, não exigências adicionais do professor.
 
 Fontes: [modo estrito do Pydantic](https://docs.pydantic.dev/latest/concepts/strict_mode/)
@@ -123,8 +129,8 @@ app/
   main.py           # cria a aplicação, inicializa o banco e registra as rotas
   database.py       # URL, engine e dependência de sessão
   models.py         # modelo SQLAlchemy Tarefa e metadados da tabela
-  schemas.py        # TarefaCreate, TarefaConcluir e TarefaRead (Pydantic)
-  crud.py           # criar, listar, concluir e excluir no banco
+  schemas.py        # TarefaCreate, TarefaAtualizar e TarefaRead (Pydantic)
+  crud.py           # criar, listar, atualizar e excluir no banco
   routes.py         # quatro operações HTTP e tradução de ausência para 404
 tests/
   conftest.py       # cliente, banco temporário e isolamento por teste
@@ -139,11 +145,14 @@ ou repositórios além desse módulo de operações.
 **Interface dos componentes:**
 
 - `TarefaCreate`: somente `titulo`, com validação estrita, normalização e limite.
-- `TarefaConcluir`: somente `concluida`, booleano estrito com valor `true`.
+- `TarefaAtualizar`: `titulo` e/ou `concluida`, com pelo menos um campo;
+  título normalizado e válido, booleano estrito com valor `true` e sem `null`.
 - `TarefaRead`: `id`, `titulo` e `concluida`; serialização de instância do ORM.
 - `criar_tarefa(sessao, titulo)`: recebe título já validado, persiste e retorna a tarefa.
 - `listar_tarefas(sessao)`: retorna lista ordenada por ID, incluindo concluídas.
-- `concluir_tarefa(sessao, id)`: retorna a tarefa persistida ou `None` se não existir.
+- `atualizar_tarefa(sessao, id, alteracoes)`: recebe um dicionário não vazio com
+  somente os campos enviados e já validados; retorna a tarefa persistida ou
+  `None` se não existir. Preserva campos omitidos e confirma a atualização inteira.
 - `excluir_tarefa(sessao, id)`: retorna verdadeiro após excluir ou falso se ausente.
 - `get_db()`: fornece uma sessão por requisição e sempre a fecha ao terminar.
 

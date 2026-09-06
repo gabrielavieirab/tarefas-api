@@ -1,6 +1,6 @@
 # Critérios de aceitação
 
-Versão 1.0.0, vinculada à [especificação SDD](especificacao_sdd.md).
+Versão 1.1.0, vinculada à [especificação SDD](especificacao_sdd.md).
 Defini os critérios abaixo para orientar a implementação da API por Felipe
 e os testes por Caike.
 
@@ -50,12 +50,14 @@ Quando o cenário precisar de tarefa concluída, prepará-la por uma requisiçã
 - **CA-14 - Corpo de conclusão inválido (RN-05).** Testar ausência de corpo,
   `{}`, JSON malformado e, para `concluida`, `false`, `null`, `1`, `0`, `"true"`,
   `"false"`, lista e objeto. Esperar `422` e tarefa original inalterada.
-- **CA-15 - Alterações fora do escopo (RN-05).** Acrescentar `titulo`, `id` ou
-  outro campo ao PATCH válido retorna `422`; não concluir nem alterar o registro.
+- **CA-15 - Alterações fora do escopo (RN-05).** Acrescentar `id`, `prioridade` ou
+  outro campo não permitido ao PATCH válido retorna `422`; não concluir nem editar
+  o registro. `titulo` é um campo permitido desde a versão 1.1.0.
 - **CA-16 - Conclusão de ID inexistente (RF-06).** Com ID válido ausente e corpo
   válido, esperar `404` e `{"detail":"Tarefa não encontrada."}`.
 - **CA-17 - Validação antes da consulta (RN-09).** Com ID válido inexistente e
-  corpo inválido, esperar `422`, não `404`.
+  corpo inválido, esperar `422`, não `404`. Cobrir tanto título inválido quanto
+  conclusão inválida, inclusive quando enviados junto de outro campo válido.
 
 ## Exclusão e IDs
 
@@ -75,11 +77,12 @@ Quando o cenário precisar de tarefa concluída, prepará-la por uma requisiçã
 
 ## Persistência, contrato e integração
 
-- **CA-23 - Reinicialização (RF-07, RN-11).** Cadastrar três tarefas, concluir
-  uma e excluir outra. Encerrar a aplicação, criar nova instância com o mesmo
-  arquivo SQLite e verificar pelo GET que restam só as duas esperadas, com os
-  estados corretos. Pode ser teste automatizado com arquivo temporário persistente
-  entre instâncias; registrar também a execução no ambiente padronizado.
+- **CA-23 - Reinicialização (RF-07, RN-11).** Cadastrar três tarefas, editar o
+  título de uma, concluir outra e excluir a terceira. Encerrar a aplicação,
+  criar nova instância com o mesmo arquivo SQLite e verificar pelo GET que restam
+  só as duas esperadas, com os títulos e estados corretos. Pode ser teste
+  automatizado com arquivo temporário persistente entre instâncias; registrar
+  também a execução no ambiente padronizado.
 - **CA-24 - Isolamento (RNF-02).** A suíte usa banco temporário limpo, não lê nem
   altera o banco de uso manual e deixa a dependência de sessão restaurada ao final.
 - **CA-25 - Formato das respostas (RNF-03).** Respostas `200`, `201`, `404` e `422`
@@ -90,13 +93,38 @@ Quando o cenário precisar de tarefa concluída, prepará-la por uma requisiçã
   suíte nos PRs e integrações acordados. Guardar logs/prints com comando, resultado
   e referência da versão testada; não registrar aprovação sem uma execução real.
 
+## Edição do texto
+
+- **CA-27 - Editar tarefa pendente (RF-08, RN-12).** Cadastrar `Estudar matematca`
+  e enviar PATCH com `{"titulo":"Estudar matemática"}`. Esperar `200`, mesmo ID,
+  novo título e `concluida=false`. GET confirma; não criar uma segunda tarefa nem
+  alterar outras tarefas. Repetir o PATCH retorna os mesmos dados. Substituir o
+  título completo por `Revisar português` também é válido.
+- **CA-28 - Editar tarefa concluída (RF-08, RN-12).** Concluir uma tarefa e editar
+  apenas seu título. Esperar `200`, mesmo ID, novo título e `concluida=true` no
+  retorno e no GET. A edição não reabre a tarefa.
+- **CA-29 - Validar título na edição (RF-05, RF-08, RN-02/RN-03).** No PATCH,
+  aceitar títulos de 1 e 120 caracteres, normalizar espaços nas extremidades e
+  preservar espaços internos e acentos, como no POST. Aceitar título já usado por
+  outra tarefa. Rejeitar vazio, só espaços, 121 caracteres após normalização,
+  `null`, número, booleano, lista e objeto com `422`, mantendo a tarefa original.
+- **CA-30 - Editar e concluir juntos (RF-03, RF-08, RN-12).** PATCH de tarefa
+  pendente com `{"titulo":"Revisar português","concluida":true}` retorna `200`,
+  mesmo ID, novo texto e estado concluído; GET confirma ambos. Em casos separados,
+  enviar título inválido com `true` e título válido com conclusão inválida:
+  esperar `422` e nenhum dos campos alterados.
+- **CA-31 - Editar ID inexistente (RF-06, RF-08).** Com ID válido ausente e título
+  válido, esperar `404` e `{"detail":"Tarefa não encontrada."}`. Não criar uma
+  tarefa; preservar os demais registros.
+
 ## Revisão da especificação
 
 - [ ] Felipe confirma que os contratos e as interfaces de persistência são implementáveis.
 - [ ] Caike confirma que os cenários são testáveis no ambiente escolhido.
-- [ ] O grupo valida limite do título, corpo do PATCH, regras de campos extras e códigos HTTP.
+- [ ] O grupo valida edição do título, preservação dos campos omitidos, corpo do
+  PATCH, limites, campos extras e códigos HTTP.
 - [ ] Registrarei os comentários e ajustes em `refinamentos.md`, com links reais.
 
 A Issue #1 deve ser considerada concluída somente após a revisão prevista nela.
-Os cenários CA-01 a CA-26 serão transformados em testes/evidências nas Issues #4 a
+Os cenários CA-01 a CA-31 serão transformados em testes/evidências nas Issues #4 a
 #8; não é necessário criar uma Issue por cenário.
