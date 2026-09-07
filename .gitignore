@@ -7,3 +7,7 @@ __pycache__/
 # Banco de uso manual (RN-11): cada ambiente tem o seu; não versionar.
 tarefas.db
 *.db
+*.db-*
+test-results/
+build/
+dist/
