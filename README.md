@@ -16,10 +16,10 @@ Disponibilizar uma API pequena e objetiva para gerenciar tarefas, permitindo reg
 
 | Integrante | Responsabilidade | RA |
 |---|---|---|
-| Vitor Borges | Especificação SDD, contratos e decisões técnicas | PREENCHER |
-| Gabriela Vieira Baptista | GitHub, organização, documentação e evidências | PREENCHER |
-| Felipe Ribeiro | Implementação da API e banco de dados | PREENCHER |
-| Caike | Testes, Docker e GitHub Actions | PREENCHER |
+| Vitor de Assis Patricio Borges | Especificação SDD, contratos e decisões técnicas | 22304737 |
+| Gabriela Vieira Baptista | GitHub, organização, documentação e evidências | 22510133 |
+| Felipe Domingos Ribeiro Pereira | Implementação da API e banco de dados | 22604250 |
+| Caike Ribeiro Menezes | Testes, Docker e GitHub Actions | 22601978 |
 
 ## Tecnologias
 
