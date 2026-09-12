@@ -1,8 +1,20 @@
 # API de Gerenciamento de Tarefas
 
+API REST simples para criação, consulta, atualização e exclusão de tarefas. O projeto foi desenvolvido como parte do Bootcamp com Python, FastAPI, SQLite, SQLAlchemy, Pydantic, pytest, Docker e GitHub Actions.
+
+## Visão geral
+
+O sistema permite gerenciar tarefas por meio de quatro operações HTTP. Cada tarefa possui um identificador, um título e um status de conclusão. A API foi organizada para ser simples, testável e fácil de executar em diferentes ambientes.
+
+## Status do projeto
+
+A implementação principal da API, os testes automatizados, o ambiente Docker, o pipeline de integração contínua e a documentação estão organizados no repositório e integrados ao fluxo de desenvolvimento.
+
+A validação funcional foi concluída com sucesso. Confirmou-se que o banco de dados gera os identificadores automaticamente a partir de 1 e que o endpoint GET retorna corretamente os IDs persistidos. A suíte automatizada foi executada com 80 testes aprovados.
+
 ## Objetivo
 
-Esta é uma API simples para gerenciamento de tarefas. O sistema permite criar, listar, atualizar e excluir tarefas por meio de quatro operações HTTP.
+Disponibilizar uma API pequena e objetiva para gerenciar tarefas, permitindo registrar uma tarefa, consultar tarefas existentes, atualizar seus dados ou status de conclusão e removê-la.
 
 ## Equipe
 
@@ -17,137 +29,30 @@ Esta é uma API simples para gerenciamento de tarefas. O sistema permite criar, 
 
 - Python 3.12
 - FastAPI
+- Uvicorn
 - SQLite
 - SQLAlchemy
+- Pydantic
 - pytest
 - Docker
+- GitHub Actions
 
-## Operações da API
+## Funcionalidades e rotas
 
 | Método | Rota | Descrição |
 |---|---|---|
-| POST | `/tarefas` | Cadastrar uma tarefa. |
-| GET | `/tarefas` | Listar as tarefas cadastradas. |
-| PATCH | `/tarefas/{id}` | Atualizar uma tarefa ou marcá-la como concluída. |
-| DELETE | `/tarefas/{id}` | Excluir uma tarefa. |
+| `POST` | `/tarefas` | Cria uma nova tarefa. |
+| `GET` | `/tarefas` | Lista as tarefas cadastradas. |
+| `PATCH` | `/tarefas/{id}` | Atualiza uma tarefa existente ou altera seu status. |
+| `DELETE` | `/tarefas/{id}` | Exclui uma tarefa existente. |
 
 Cada tarefa possui os campos `id`, `titulo` e `concluida`.
-O `PATCH /tarefas/{id}` permite editar `titulo`, enviar `concluida: true` ou ambos,
-preservando o ID e os campos omitidos. O projeto mantém quatro operações HTTP.
 
-## Fluxo de trabalho
+Exemplo de tarefa:
 
-O projeto utiliza Issues, GitHub Projects, branches de funcionalidade e Pull Requests. Cada alteração deve seguir o fluxo:
-
-```text
-Issue → branch → commits → Pull Request → revisão → testes → merge
-```
-
-## Especificação e decisões técnicas
-
-A proposta técnica da entrega inicial usa Python 3.12, FastAPI, Pydantic 2,
-SQLAlchemy 2 e SQLite. A aplicação terá uma única tabela e acesso síncrono ao
-banco. pytest e TestClient apoiarão a validação; Docker e GitHub Actions serão
-configurados nas tarefas de ambiente e CI. Essas escolhas priorizam facilidade
-de execução, escopo pequeno e aderência ao roteiro.
-
-- [Especificação SDD](docs/especificacao_sdd.md): requisitos, regras e contratos.
-- [Decisões técnicas e arquitetura](docs/decisoes_tecnicas.md): justificativas e ADRs.
-- [Contrato OpenAPI](docs/openapi.json): definição das quatro operações em formato estruturado.
-- [Critérios de aceitação](docs/criterios_aceitacao.md): cenários para implementação e testes.
-- [Registro de refinamentos](docs/refinamentos.md): decisões iniciais e acompanhamento da revisão.
-- [Guia da minha contribuição](docs/entrega_vitor.md): escopo, dependências e checklist de revisão.
-
-Preparei estes documentos para a [Issue #1](https://github.com/gabrielavieirab/tarefas-api/issues/1).
-Minha proposta está pendente de revisão por Felipe e Caike. Os comandos de execução
-e as evidências da aplicação serão consolidados conforme a implementação, o ambiente e os testes
-forem integrados.
-
-## Instalação e execução
-
-Use Python 3.12. A validação desta contribuição usa Python 3.12.10.
-Na raiz do repositório, crie e ative um ambiente virtual.
-
-Windows (PowerShell):
-
-```powershell
-py -3.12 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-Linux/macOS:
-
-```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-```
-
-Com o ambiente ativo:
-
-```bash
-python -m pip install -e ".[test]"
-python -m pip check
-python -m uvicorn app.main:app --reload
-```
-
-A API atende em http://127.0.0.1:8000 e a documentação interativa em
-http://127.0.0.1:8000/docs. O banco e a tabela são criados na inicialização.
-Por padrão, o arquivo é `tarefas.db` no diretório de execução.
-
-Para escolher outro banco, defina `TAREFAS_DATABASE_URL` **antes** de iniciar
-a aplicação. Exemplo no PowerShell:
-
-```powershell
-$env:TAREFAS_DATABASE_URL = "sqlite:///./outro_banco.db"
-python -m uvicorn app.main:app --reload
-```
-
-No Linux/macOS, use `export TAREFAS_DATABASE_URL="sqlite:///./outro_banco.db"`.
-O diretório escolhido deve existir.
-
-## Testes
-
-```bash
-python -m pytest -v
-```
-
-A suíte aproveita os testes de modelo e das rotas existentes, complementando os
-CA-01 a CA-31. Cada teste recebe seu próprio SQLite temporário. A inicialização
-da API também usa um banco separado, e os arquivos são removidos após fechar as
-conexões. Não é necessário criar ou apagar o banco manual para executar testes.
-
-O teste de reinicialização abre a aplicação em dois processos com o mesmo arquivo
-temporário. O teste de isolamento verifica que a suíte não abre o banco manual e
-restaura a variável de ambiente e as dependências do FastAPI.
-
-As dependências diretas estão fixadas no `pyproject.toml`. Por decisão desta etapa,
-não foi criado constraints/lock; as versões transitivas ainda podem variar.
-Consulte [as evidências](docs/evidencias_testes.md) para o resultado e as limitações
-da validação, incluindo o que falta para concluir o CA-26.
-
-## Docker
-
-Com o Docker em execução:
-
-```bash
-docker build -t tarefas-api:test .
-docker run --rm tarefas-api:test python -m pytest -v
-docker run --rm -p 8000:8000 -v tarefas-dados:/data tarefas-api:test
-```
-
-A imagem usa Python 3.12.10 e instala o mesmo extra `[test]`.
-A API grava em `/data/tarefas.db`; o volume `tarefas-dados` preserva os dados
-quando o container é recriado. Os testes usam arquivos temporários próprios.
-Para parar a API executada em primeiro plano, pressione Ctrl+C.
-
-## Integração contínua
-
-O workflow [tests.yml](.github/workflows/tests.yml) executa em Pull Requests
-destinados a `develop` ou `main` e em pushes nessas duas branches.
-Ele instala as dependências, confere o ambiente, executa pytest, constrói a imagem
-e executa a mesma suíte no container. Uma falha impede o sucesso do job.
-
-Os logs registram o commit, o Python, as dependências e os resultados.
-Os relatórios XML ficam no artefato `resultados-testes` da execução no GitHub Actions.
-O workflow não faz deploy nem merge. A configuração só terá evidência remota
-depois de enviada e executada no GitHub.
+```json
+{
+  "id": 1,
+  "titulo": "Estudar a API",
+  "concluida": false
+}
