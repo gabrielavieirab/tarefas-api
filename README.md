@@ -1,16 +1,20 @@
 # API de Gerenciamento de Tarefas
 
-API REST simples para criação, consulta, atualização e exclusão de tarefas. O projeto foi desenvolvido como parte do Bootcamp com Python, FastAPI, SQLite, SQLAlchemy, pytest, Docker e GitHub Actions.
+API REST simples para criação, consulta, atualização e exclusão de tarefas. O projeto foi desenvolvido como parte do Bootcamp com Python, FastAPI, SQLite, SQLAlchemy, Pydantic, pytest, Docker e GitHub Actions.
+
+## Visão geral
+
+O sistema permite gerenciar tarefas por meio de quatro operações HTTP. Cada tarefa possui um identificador, um título e um status de conclusão. A API foi organizada para ser simples, testável e fácil de executar em diferentes ambientes.
 
 ## Status do projeto
 
 A implementação principal da API, os testes automatizados, o ambiente Docker, o pipeline de integração contínua e a documentação estão organizados no repositório e integrados ao fluxo de desenvolvimento.
 
-Durante a validação manual inicial, foi identificada uma diferença entre versões relacionadas ao identificador da primeira tarefa. A equipe está confirmando o comportamento na versão mais recente da branch `develop` antes da validação funcional final.
+A validação funcional foi concluída com sucesso. Confirmou-se que o banco de dados gera os identificadores automaticamente a partir de 1 e que o endpoint GET retorna corretamente os IDs persistidos. A suíte automatizada foi executada com 80 testes aprovados.
 
 ## Objetivo
 
-Disponibilizar uma API pequena e objetiva para gerenciar tarefas, permitindo registrar uma tarefa, consultar tarefas existentes, atualizar seus dados e removê-la.
+Disponibilizar uma API pequena e objetiva para gerenciar tarefas, permitindo registrar uma tarefa, consultar tarefas existentes, atualizar seus dados ou status de conclusão e removê-la.
 
 ## Equipe
 
@@ -33,18 +37,18 @@ Disponibilizar uma API pequena e objetiva para gerenciar tarefas, permitindo reg
 - Docker
 - GitHub Actions
 
-## Funcionalidades
+## Funcionalidades e rotas
 
 | Método | Rota | Descrição |
 |---|---|---|
 | `POST` | `/tarefas` | Cria uma nova tarefa. |
 | `GET` | `/tarefas` | Lista as tarefas cadastradas. |
-| `PATCH` | `/tarefas/{id}` | Atualiza uma tarefa existente. |
+| `PATCH` | `/tarefas/{id}` | Atualiza uma tarefa existente ou altera seu status. |
 | `DELETE` | `/tarefas/{id}` | Exclui uma tarefa existente. |
 
 Cada tarefa possui os campos `id`, `titulo` e `concluida`.
 
-Exemplo:
+Exemplo de tarefa:
 
 ```json
 {
