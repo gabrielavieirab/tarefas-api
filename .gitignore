@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# Banco de uso manual (RN-11): cada ambiente tem o seu; não versionar.
+tarefas.db
+*.db
+*.db-*
+test-results/
+build/
+dist/
