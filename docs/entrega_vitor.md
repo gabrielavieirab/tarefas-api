@@ -7,6 +7,7 @@ as bases têm a mesma aplicação e os mesmos testes. A diferença de CI da `mai
 é registrada separadamente nas evidências.
 
 Rastreabilidade: [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22).
+Publicação: [PR #25 para develop](https://github.com/gabrielavieirab/tarefas-api/pull/25).
 
 ## Escopo da contribuição
 
@@ -60,7 +61,9 @@ A [execução pública da main](https://github.com/gabrielavieirab/tarefas-api/a
 com Python 3.12.10 e base `8ecaf5f`, aprovou testes no runner, build Docker,
 testes no container e publicação dos relatórios. Docker não estava disponível
 neste ambiente local; essa evidência remota não é apresentada como build local.
-A CI da nova contribuição deve ser conferida quando seu PR for aberto.
+A CI da nova contribuição é acompanhada nos checks do
+[PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25), separadamente
+da execução histórica da `main`.
 
 ## Integração anterior e revisão
 
@@ -106,7 +109,7 @@ nem mudar regras sem especificação e testes.
 - [x] Suíte oficial executada: 80 testes aprovados.
 - [x] Relato técnico preparado para o relatório consolidado.
 - [x] Revisão assistida da análise de IA registrada, com observações e evidências.
-- [ ] PR desta atualização aberto e CI correspondente conferida.
+- [x] Branch enviada ao GitHub e PR #25 aberto para `develop`, com checks públicos vinculados.
 - [ ] Revisão de Felipe e conferência de Gabriela registradas.
 - [ ] Ajustes da revisão tratados e contribuição integrada pelo fluxo da equipe.
 

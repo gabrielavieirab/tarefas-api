@@ -16,6 +16,9 @@ integrados à `main`. A versão publicada conferida nesta atualização é o com
 O PR documental é preparado sobre a `develop` em `1b6294a`, que já incorpora
 a estrutura de governança e análise de IA de Gabriela. A aplicação e os testes
 são os mesmos nas duas bases; a correção de CI de `8ecaf5f` está na `main`.
+A contribuição documental está publicada no
+[PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25), vinculado à
+[Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22), para revisão.
 
 Em 15/10/2026, a suíte local terminou com **80 testes aprovados e um aviso de
 descontinuação**, sem falhas. A

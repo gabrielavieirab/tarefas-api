@@ -167,6 +167,11 @@ da versão final. **Impacto:** [relato técnico](relato_experiencia_vitor.md),
 **Evidência:** fontes e trechos identificados no parecer. A matriz final e o PDF
 continuam sob consolidação de Gabriela; as regras da API não mudam.
 
+A documentação e os dois textos de contribuição foram publicados no
+[PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25), para `develop`,
+vinculado à Issue #22. O PR concentra o diff e os checks desta contribuição;
+as revisões de Felipe e Gabriela ainda não são marcadas como realizadas.
+
 ## Como registrar os próximos ajustes
 
 Para cada feedback real, acrescentarei uma entrada com:

@@ -73,6 +73,7 @@ final são etapas distintas da preparação desta contribuição.
 ## Evidências para a consolidação
 
 - [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22): escopo da documentação de Vitor.
+- [PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25): publicação desta contribuição para revisão.
 - [Critérios de aceitação](criterios_aceitacao.md): relação entre regras e cenários.
 - [Refinamentos](refinamentos.md): evolução e decisões rastreadas.
 - [Evidências de testes e CI](evidencias_testes.md): ambientes, resultados e limitações.

@@ -74,6 +74,12 @@ também passou. Foram conferidos os links locais dos documentos da contribuiçã
 os blocos Markdown, a preservação dos esquemas do contrato estático e o diff.
 O XML dessa conferência fica em `test-results/pytest-pre-pr.xml`, ignorado pelo Git.
 
+A contribuição foi publicada no
+[PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25), para `develop`,
+vinculado à [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22).
+Os checks desse PR apresentam a execução de CI específica da contribuição.
+Sua revisão humana e integração são acompanhadas separadamente dos testes.
+
 ## Registro histórico - validação de 07/09/2026
 
 As seções seguintes preservam os resultados e pendências registrados na época.
