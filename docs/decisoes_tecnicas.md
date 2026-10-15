@@ -1,10 +1,13 @@
 # Decisões técnicas e arquitetura
 
-Registrei as decisões técnicas abaixo em 05/09/2026.
-Estado dos ADRs: **propostos para revisão**.
+Decisões registradas inicialmente em 05/09/2026 e consolidadas em 15/10/2026.
+Estado: **escolhas implementadas na base `8ecaf5f`; consolidação da entrega 2
+em revisão**. O registro da integração não equivale à aprovação individual de
+cada ADR por todos os colegas.
 ADR significa registro de uma decisão arquitetural: contexto, escolha, justificativa
-e consequências. A escolha prioriza facilidade de aprendizado e execução para a
-entrega inicial, preservando as tecnologias já indicadas no `AGENTS.md`.
+e consequências. As escolhas priorizam facilidade de aprendizado, execução e
+verificação no escopo acadêmico, preservando as tecnologias do `AGENTS.md`.
+A [arquitetura detalhada](arquitetura.md) descreve o fluxo implementado.
 
 ## ADR-001 - Python e FastAPI
 
@@ -25,8 +28,10 @@ Não há evidência de maior familiaridade do grupo com outra linguagem que just
 essa troca neste momento.
 
 **Consequências.** O grupo precisa conhecer modelos Pydantic e sessões do banco.
-Python 3.12 é a linha de referência do projeto, não uma alegação de ser a versão
-mais recente. Caike deve usar a mesma linha localmente, no container e no CI.
+Python 3.12 é a linha de referência do projeto. O container e o CI fixam
+3.12.10. A execução documental de 15/10/2026 usou 3.12.6, diferença registrada
+nas evidências. FastAPI 0.141.1, Pydantic 2.13.5 e Uvicorn 0.52.4 estão
+fixados no `pyproject.toml` e são usados em `app/main.py` e `app/schemas.py`.
 
 Fontes: [corpos de requisição](https://fastapi.tiangolo.com/tutorial/body/) e
 [testes do FastAPI](https://fastapi.tiangolo.com/tutorial/testing/).
@@ -52,8 +57,14 @@ e MySQL exigiriam mais configuração sem resolver uma necessidade desta entrega
 **Consequências.** SQLAlchemy tem um custo de aprendizado pequeno, mas real; a
 implementação deve se limitar a criar, selecionar, atualizar e excluir registros.
 SQLite não é a escolha para múltiplos servidores gravando no mesmo arquivo.
-Um processo da API é suficiente para a demonstração. Preservar o arquivo em volume
-no Docker e usar um arquivo temporário independente nos testes.
+Um processo da API é suficiente para a demonstração. O Docker aponta para
+`/data/tarefas.db`; o comando documentado monta um volume nesse diretório.
+Os testes usam arquivos temporários independentes. A persistência entre processos
+foi testada; a conferência operacional do volume fica na validação de ambiente.
+
+**Implementação.** SQLAlchemy 2.0.52, `criar_engine()`, `get_db()` e `init_db()`
+em `app/database.py`; modelo em `app/models.py`; operações em `app/crud.py`.
+Não foi adicionado serviço de banco, camada genérica de repositórios ou migração.
 
 Fonte: [usos adequados do SQLite](https://www.sqlite.org/whentouse.html) e
 [guia inicial do SQLAlchemy 2](https://docs.sqlalchemy.org/en/20/orm/quickstart.html).
@@ -77,13 +88,19 @@ atividade sem excluir e cadastrar outra tarefa, sem acrescentar rotas ou tabelas
 Campos extras rejeitados tornam erros de integração visíveis.
 
 **Consequências.** É preciso validar o tipo booleano estritamente: valores como
-`1` ou `"true"` não podem ser convertidos silenciosamente. Recomenda-se `StrictBool`
-com validação de valor verdadeiro; uma checagem de igualdade simples com `True`
-não é suficiente em Python. Para o título, normalizar antes de verificar o tamanho,
-reutilizando a mesma regra em POST e PATCH. No PATCH, distinguir campo omitido de
-`null` explícito; rejeitar `null` e corpo vazio. Aplicar apenas campos enviados
-(por exemplo, com `model_dump(exclude_unset=True)`), depois de validar o corpo todo.
+`1` ou `"true"` não podem ser convertidos silenciosamente. A implementação usa
+um validador `mode="before"` com `v is not True`, rejeitando coerções antes de
+validar o booleano. Para o título, `_validar_titulo()` normaliza antes de verificar
+o tamanho e é reutilizado em POST/PATCH. `model_fields_set` distingue omissão de
+`null` explícito e detecta PATCH vazio. A rota usa
+`model_dump(exclude_unset=True)` para aplicar apenas os campos enviados,
+depois de validar o corpo todo.
 Essas regras são escolhas do projeto, não exigências adicionais do professor.
+
+**Limite conhecido.** Os validadores personalizados garantem essas regras na
+execução, mas o OpenAPI gerado pelo FastAPI não descreve todas elas. O contrato
+estático permanece a referência detalhada e a suíte verifica o comportamento.
+Completar os metadados do esquema gerado é uma pendência documental.
 
 Fontes: [modo estrito do Pydantic](https://docs.pydantic.dev/latest/concepts/strict_mode/)
 e [validadores](https://docs.pydantic.dev/latest/concepts/validators/).
@@ -102,11 +119,20 @@ workflow do GitHub Actions para executar a suíte em PRs destinados a `develop` 
 **Justificativa.** Reutiliza os comandos já registrados, permite testar as rotas
 sem iniciar um servidor HTTP separado e atende às tarefas de ambiente e CI.
 
-**Consequências.** Caike deve validar e fixar versões compatíveis dos pacotes,
-inclusive dependências transitivas em arquivo de constraints/lock, e usar esse
-arquivo no comando efetivo de instalação local, Docker e CI. A imagem deve ter uma
-versão de patch ou digest registrado na configuração final. Esses arquivos e a
-escolha dos pins são parte da Issue #6, após executar a aplicação de Felipe.
+**Implementação e ajuste da decisão.** O
+[PR #15](https://github.com/gabrielavieirab/tarefas-api/pull/15) integrou o
+ambiente, os testes e o CI. O `pyproject.toml` fixa as dependências diretas;
+Docker e CI fixam Python 3.12.10. O workflow instala o projeto, registra versões,
+executa `pip check`, testa no runner, constrói a imagem e testa no container.
+O commit `8ecaf5f` corrigiu a geração dos XML e a execução pública de
+15/10/2026 terminou com sucesso, incluindo o artefato `resultados-testes`.
+
+**Consequências.** A proposta inicial previa constraints/lock também para
+dependências transitivas. O estado integrado adotou apenas pins diretos, conforme
+registrado nas [evidências](evidencias_testes.md). Essa diferença é explicitada
+nesta consolidação: instalações não são idênticas por definição, pois transitivas
+e a tag da imagem sem digest podem variar. Fixação completa é uma melhoria futura
+a avaliar com Caike; esta atualização não adiciona dependências ou outro lock.
 
 Para os testes, cada caso deve ter banco SQLite temporário limpo e descartável.
 A sobrescrita da dependência de sessão também precisa ser desfeita. A inicialização
@@ -118,10 +144,31 @@ Fontes: [teste de banco no FastAPI](https://fastapi.tiangolo.com/how-to/testing-
 [testes do FastAPI](https://fastapi.tiangolo.com/tutorial/testing/) e
 [Python no GitHub Actions](https://docs.github.com/en/actions/tutorials/build-and-test-code/python).
 
+## ADR-005 - Branches, PRs e evidências de integração
+
+**Contexto.** A entrega exige rastrear contribuições e revisão entre pares,
+além de apresentar código e testes funcionando.
+
+**Decisão.** Trabalhar por Issue e branch própria, integrar por PR para
+`develop`, executar a CI e obter revisão de outro integrante antes do merge.
+A versão estável chega a `main` por PR de integração. Vitor prepara a
+documentação técnica; Felipe revisa o conteúdo e Gabriela confere a aderência
+à atividade. Uma ferramenta de IA não substitui essa aprovação humana.
+
+**Justificativa.** O PR concentra o diff, a discussão e o resultado dos testes.
+Relacionar cada mudança ao contrato e ao teste permite explicar por que ela
+foi feita e avaliar seu impacto.
+
+**Consequências.** CI aprovada não comprova revisão humana. O histórico confirma
+as integrações pelos PRs #12, #14, #15, #16 e #17, mas as evidências de review
+devem ser citadas separadamente. Há
+[aprovação de Caike no PR #16](https://github.com/gabrielavieirab/tarefas-api/pull/16#pullrequestreview-5188617537).
+Na consulta de 15/10/2026, os PRs #12 e #15 não possuem reviews formais
+registrados. Não são marcados como aprovados por colegas nesta consolidação.
+
 ## Decomposição em componentes
 
-Estrutura proposta para Felipe e Caike implementarem. Os nomes abaixo são pontos
-de acordo; os arquivos de aplicação ainda não fazem parte desta contribuição.
+Estrutura implementada e integrada pelos PRs de aplicação e testes:
 
 ```text
 app/
@@ -134,7 +181,11 @@ app/
   routes.py         # quatro operações HTTP e tradução de ausência para 404
 tests/
   conftest.py       # cliente, banco temporário e isolamento por teste
-  test_tarefas.py   # cenários de aceitação
+  test_tarefas.py   # cenários HTTP e persistência entre processos
+  test_models.py    # integridade e persistência do modelo
+  test_isolamento.py # proteção do banco manual e limpeza
+scripts/
+  criar_banco.py    # inicialização opcional sem servidor
 ```
 
 **Fluxo interno:** cliente envia HTTP; a rota valida ID e corpo pelos esquemas;
@@ -169,6 +220,21 @@ na facilidade de executar testes. O principal custo é aprender o básico de Pyd
 SQLAlchemy, Docker e PRs; limitar cada ferramenta ao escopo definido mantém esse
 custo controlado. A escolha não depende de contratar hospedagem ou banco externo.
 
-Se Felipe ou Caike identificarem uma dificuldade concreta na revisão, registrarei
-a alternativa e o impacto antes da mudança. Não ampliar a API para justificar uma
-tecnologia: os critérios de entrega e a facilidade de execução orientam a escolha.
+Os 80 testes aprovados e a execução de CI com container sustentam a viabilidade
+da solução no escopo atual. A defesa técnica considera também os custos:
+
+- FastAPI/Pydantic reduzem a configuração de validação e documentação, mas
+  validadores personalizados precisam de testes e de metadados OpenAPI complementares.
+- SQLite evita operar um servidor de banco, com a limitação de um arquivo local
+  compartilhado e sem requisitos estabelecidos para múltiplos servidores.
+- SQLAlchemy centraliza consultas e transações, ao custo de aprender engine,
+  sessão e mapeamento ORM para uma única tabela.
+- O PATCH parcial permite corrigir texto sem recriar a tarefa, exigindo distinguir
+  omissão de `null` e preservar os demais campos. A reabertura permanece fora do escopo.
+- Docker e CI verificam instalação e execução em outro ambiente; isso não
+  substitui revisão humana nem comprova por si só a persistência operacional do volume.
+- Pins diretos tornam explícitas as versões principais, mas a ausência de lock
+  transitivo limita a reprodução exata. A limitação deve acompanhar o relatório.
+
+Feedback novo, dificuldade de implementação ou mudança de requisito deve gerar
+um registro em [Refinamentos](refinamentos.md) antes de alterar o contrato.
