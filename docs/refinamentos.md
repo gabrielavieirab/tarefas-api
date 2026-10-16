@@ -172,6 +172,26 @@ A documentação e os dois textos de contribuição foram publicados no
 vinculado à Issue #22. O PR concentra o diff e os checks desta contribuição;
 as revisões de Felipe e Gabriela ainda não são marcadas como realizadas.
 
+**REF-14 - Esclarecer a referência do CA-24 e as operações do diagrama.**
+
+**Data:** 16/10/2026, contrato 1.1.0. **Origem:** feedback de um colega,
+repassado por Vitor nesta revisão da contribuição do
+[PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25); o link do
+comentário específico não foi informado.
+
+**Constatação:** a referência do CA-24 indicava apenas o arquivo de isolamento,
+dificultando localizar o teste; a explicação do diagrama no README não distinguia
+explicitamente consultas e alterações no banco.
+**Decisão:** citar `test_ca24_banco_manual_e_limpeza` pelo nome e explicar que
+GET apenas consulta, enquanto POST, PATCH e DELETE confirmam escritas com
+`commit`; PATCH e DELETE consultam o registro antes de alterá-lo.
+**Impacto:** rastreabilidade do CA-24 e clareza sobre RN-10/RNF-05 no README,
+sem alteração de comportamento ou do contrato OpenAPI.
+**Verificação:** conferência da referência com `tests/test_isolamento.py` e
+da explicação com `app/crud.py`; `.\.venv\Scripts\python.exe -m pytest tests -q`
+em 16/10/2026: `80 passed, 1 warning in 9.78s`. O aviso é de descontinuação
+do TestClient. A aprovação do colega permanece pendente.
+
 ## Como registrar os próximos ajustes
 
 Para cada feedback real, acrescentarei uma entrada com:

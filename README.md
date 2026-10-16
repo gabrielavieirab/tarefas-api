@@ -176,9 +176,13 @@ flowchart LR
     ORM --> Banco[(SQLite)]
 ```
 
-O FastAPI valida a entrada antes de executar a função da rota. O CRUD confirma
-as escritas antes do retorno de sucesso; a rota traduz ausência de registro
-em 404. Consulte a [arquitetura detalhada](docs/arquitetura.md) para os módulos,
+O FastAPI valida a entrada antes de executar a função da rota. No diagrama,
+o acesso ao SQLite representa tanto leitura quanto escrita: GET consulta os
+registros sem alterá-los e sem executar `commit`; POST, PATCH e DELETE criam,
+atualizam e excluem registros, respectivamente, e o CRUD confirma essas escritas
+com `commit` antes do retorno de sucesso. PATCH e DELETE também consultam o
+registro pelo ID antes de alterá-lo; se ele não existir, a rota retorna 404.
+Consulte a [arquitetura detalhada](docs/arquitetura.md) para os módulos,
 o ciclo de sessão e o fluxo de resposta.
 
 ## Integração contínua e revisão

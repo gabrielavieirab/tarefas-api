@@ -125,7 +125,11 @@ Quando o cenário precisar de tarefa concluída, prepará-la por uma requisiçã
 - CA-01 a CA-22, CA-25 e CA-27 a CA-31: cenários em `tests/test_tarefas.py`.
 - CA-23: `test_rf07_persistencia_entre_reinicializacoes`, com dois processos
   usando o mesmo SQLite temporário.
-- CA-24: `tests/test_isolamento.py` e fixtures de `tests/conftest.py`.
+- CA-24: `tests/test_isolamento.py::test_ca24_banco_manual_e_limpeza`,
+  em [test_isolamento.py](../tests/test_isolamento.py), parametrizado com e sem
+  `TAREFAS_DATABASE_URL`. Verifica que o banco manual não é acessado nem alterado,
+  os bancos temporários são removidos e a dependência de sessão é restaurada.
+  A preparação e a limpeza ficam em [conftest.py](../tests/conftest.py).
 - CA-26: execução local documentada e
   [CI da main](https://github.com/gabrielavieirab/tarefas-api/actions/runs/38781864191),
   com testes no runner, build e testes no container aprovados. A conferência
