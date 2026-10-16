@@ -1,20 +1,20 @@
 # API de Gerenciamento de Tarefas
 
-API REST simples para criação, consulta, atualização e exclusão de tarefas. O projeto foi desenvolvido como parte do Bootcamp com Python, FastAPI, SQLite, SQLAlchemy, Pydantic, pytest, Docker e GitHub Actions.
+API REST para criação, consulta, atualização e exclusão de tarefas. O projeto foi desenvolvido como parte do Bootcamp utilizando Python, FastAPI, SQLite, SQLAlchemy, Pydantic, pytest, Docker e GitHub Actions.
 
 ## Visão geral
 
-O sistema permite gerenciar tarefas por meio de quatro operações HTTP. Cada tarefa possui um identificador, um título e um status de conclusão. A API foi organizada para ser simples, testável e fácil de executar em diferentes ambientes.
-
-## Status do projeto
-
-A implementação principal da API, os testes automatizados, o ambiente Docker, o pipeline de integração contínua e a documentação estão organizados no repositório e integrados ao fluxo de desenvolvimento.
-
-A validação funcional foi concluída com sucesso. Confirmou-se que o banco de dados gera os identificadores automaticamente a partir de 1 e que o endpoint GET retorna corretamente os IDs persistidos. A suíte automatizada foi executada com 80 testes aprovados.
+A API permite gerenciar tarefas por meio de quatro operações HTTP. Cada tarefa possui um identificador, um título e um status de conclusão.
 
 ## Objetivo
 
-Disponibilizar uma API pequena e objetiva para gerenciar tarefas, permitindo registrar uma tarefa, consultar tarefas existentes, atualizar seus dados ou status de conclusão e removê-la.
+Disponibilizar uma API simples e objetiva para registrar tarefas, consultar tarefas existentes, atualizar seus dados ou status de conclusão e removê-las.
+
+## Status do projeto
+
+A API, os testes automatizados, o ambiente Docker e o pipeline de integração contínua estão configurados no repositório.
+
+A suíte automatizada possui 80 testes. Os testes locais e os testes executados dentro do container Docker foram concluídos com sucesso. A persistência do banco SQLite também foi validada utilizando um volume Docker.
 
 ## Equipe
 
@@ -48,11 +48,117 @@ Disponibilizar uma API pequena e objetiva para gerenciar tarefas, permitindo reg
 
 Cada tarefa possui os campos `id`, `titulo` e `concluida`.
 
-Exemplo de tarefa:
+Exemplo de resposta:
 
 ```json
 {
   "id": 1,
   "titulo": "Estudar a API",
   "concluida": false
-}
+}```
+
+## Pré-requisitos
+
+- Python 3.12
+- Git
+- Docker Desktop, caso queira executar a API em um container
+
+## Instalação local
+
+Clone o repositório e entre na pasta:
+
+```bash
+git clone https://github.com/gabrielavieirab/tarefas-api.git
+cd tarefas-api
+```
+
+Crie e ative o ambiente virtual no Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+Instale as dependências:
+
+```bash
+python -m pip install -e ".[test]"
+```
+
+Verifique as dependências:
+
+```bash
+python -m pip check
+```
+
+## Executar os testes
+
+```bash
+python -m pytest -v
+```
+
+Para gerar um relatório XML:
+
+```powershell
+New-Item -ItemType Directory -Force test-results
+python -m pytest -v --junitxml=test-results/pytest.xml
+```
+
+## Executar a API localmente
+
+```bash
+python -m uvicorn app.main:app --reload
+```
+
+Documentação interativa: http://127.0.0.1:8000/docs
+
+Listagem de tarefas: http://127.0.0.1:8000/tarefas
+
+## Executar com Docker
+
+Construa a imagem:
+
+```bash
+docker build -t tarefas-api .
+```
+
+Crie o volume de dados:
+
+```bash
+docker volume create tarefas-dados
+```
+
+Inicie o container:
+
+```bash
+docker run -d --name tarefas-api-container -p 8000:8000 -v tarefas-dados:/data tarefas-api
+```
+
+Acesse a documentação: http://localhost:8000/docs
+
+Para executar os testes dentro do container:
+
+```bash
+docker exec tarefas-api-container python -m pytest -v
+```
+
+O volume `tarefas-dados` preserva os dados do SQLite quando o container é removido e recriado com o mesmo volume.
+
+Para parar e remover o container:
+
+```bash
+docker stop tarefas-api-container
+docker rm tarefas-api-container
+```
+
+## Integração contínua
+
+O GitHub Actions executa o workflow de testes em pushes e pull requests direcionados às branches `main` e `develop`.
+
+O pipeline instala as dependências, verifica o ambiente, executa os testes, constrói a imagem Docker, executa os testes dentro do container e publica os relatórios XML como artefatos.
+
+Consulte as execuções na aba [Actions do GitHub](https://github.com/gabrielavieirab/tarefas-api/actions).
+
+## Evidências de testes
+
+Os resultados detalhados, os critérios de aceitação e as evidências de validação estão documentados em [`docs/evidencias_testes.md`](docs/evidencias_testes.md).
