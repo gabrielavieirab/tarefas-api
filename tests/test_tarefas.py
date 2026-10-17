@@ -181,6 +181,19 @@ def test_ca14_corpo_ausente_ou_malformado(cliente):
     assert cliente.get("/tarefas").json()[0] == tarefa
 
 
+def test_ca14_corpo_json_vazio_e_rejeitado(cliente):
+    """RN-05: `{}` é um JSON válido mas não envia nenhum campo reconhecido,
+    então deve ser 422 (distinto do caso "sem corpo", já coberto acima) e não
+    pode alterar a tarefa."""
+    tarefa = _cadastrar(cliente)
+    resposta = cliente.patch(f"/tarefas/{tarefa['id']}", json={})
+    assert resposta.status_code == 422
+    assert any(
+        "ao menos um dos campos" in erro["msg"] for erro in resposta.json()["detail"]
+    )
+    assert cliente.get("/tarefas").json()[0] == tarefa
+
+
 @pytest.mark.parametrize("campo_extra", ["id", "prioridade"])
 def test_ca15_alteracoes_fora_do_escopo(cliente, campo_extra):
     tarefa = _cadastrar(cliente)
