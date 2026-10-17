@@ -1,10 +1,13 @@
 # Critérios de aceitação
 
 Versão 1.1.0, vinculada à [especificação SDD](especificacao_sdd.md).
-Defini os critérios abaixo para orientar a implementação da API por Felipe
-e os testes por Caike.
+Atualização documental: 15/10/2026. Os critérios orientaram a implementação
+da API por Felipe e a consolidação dos testes por Caike; o comportamento
+esperado permanece o mesmo na entrega 2.
 
-Estes são **cenários especificados**, não resultados de testes executados.
+Estes são **cenários especificados**. Os resultados das execuções estão em
+[Evidências de testes e CI](evidencias_testes.md): 80 testes aprovados na
+verificação local de 15/10/2026 e CI da base `8ecaf5f` aprovada, incluindo container.
 Usar banco limpo por teste e IDs retornados pelo cadastro; não depender de IDs fixos.
 Quando o cenário precisar de tarefa concluída, prepará-la por uma requisição válida.
 
@@ -117,14 +120,29 @@ Quando o cenário precisar de tarefa concluída, prepará-la por uma requisiçã
   válido, esperar `404` e `{"detail":"Tarefa não encontrada."}`. Não criar uma
   tarefa; preservar os demais registros.
 
-## Revisão da especificação
+## Rastreabilidade e revisão da entrega 2
 
-- [ ] Felipe confirma que os contratos e as interfaces de persistência são implementáveis.
-- [ ] Caike confirma que os cenários são testáveis no ambiente escolhido.
-- [ ] O grupo valida edição do título, preservação dos campos omitidos, corpo do
-  PATCH, limites, campos extras e códigos HTTP.
-- [ ] Registrarei os comentários e ajustes em `refinamentos.md`, com links reais.
+- CA-01 a CA-22, CA-25 e CA-27 a CA-31: cenários em `tests/test_tarefas.py`.
+- CA-23: `test_rf07_persistencia_entre_reinicializacoes`, com dois processos
+  usando o mesmo SQLite temporário.
+- CA-24: `tests/test_isolamento.py::test_ca24_banco_manual_e_limpeza`,
+  em [test_isolamento.py](../tests/test_isolamento.py), parametrizado com e sem
+  `TAREFAS_DATABASE_URL`. Verifica que o banco manual não é acessado nem alterado,
+  os bancos temporários são removidos e a dependência de sessão é restaurada.
+  A preparação e a limpeza ficam em [conftest.py](../tests/conftest.py).
+- CA-26: execução local documentada e
+  [CI da main](https://github.com/gabrielavieirab/tarefas-api/actions/runs/38781864191),
+  com testes no runner, build e testes no container aprovados. A conferência
+  operacional da persistência do volume Docker segue com Caike.
 
-A Issue #1 deve ser considerada concluída somente após a revisão prevista nela.
-Os cenários CA-01 a CA-31 serão transformados em testes/evidências nas Issues #4 a
-#8; não é necessário criar uma Issue por cenário.
+A especificação foi integrada pelo
+[PR #12](https://github.com/gabrielavieirab/tarefas-api/pull/12), e as
+[Issues #1](https://github.com/gabrielavieirab/tarefas-api/issues/1) e
+[#9](https://github.com/gabrielavieirab/tarefas-api/issues/9) estão fechadas.
+Isso comprova o estado da integração, sem substituir uma evidência específica
+de revisão ou aprovação por cada colega.
+
+Na revisão documental da etapa 2, Felipe confere a aderência ao código,
+Gabriela confere a clareza e Caike confere os comandos e evidências de ambiente.
+Novos comentários e decisões devem ser registrados em
+[Refinamentos](refinamentos.md), com os links correspondentes.

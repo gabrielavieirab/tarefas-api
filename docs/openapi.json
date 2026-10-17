@@ -1,14 +1,14 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "API de lista de tarefas - contrato da entrega inicial",
+    "title": "API de lista de tarefas - contrato de aceitação",
     "version": "1.1.0",
-    "description": "Preparei esta proposta técnica para revisão na Issue #1. Contrato estático; não é evidência de uma API em execução. Quatro operações, uma tabela e três campos. Regras e critérios complementares em docs/especificacao_sdd.md e docs/criterios_aceitacao.md."
+    "description": "Contrato estático 1.1.0 integrado pelo PR #12 e mantido na entrega 2. Atualização documental em 15/10/2026, sem mudança de regras. Quatro operações, uma tabela e três campos. Regras e critérios em docs/especificacao_sdd.md e docs/criterios_aceitacao.md; execuções em docs/evidencias_testes.md. O OpenAPI gerado pelo FastAPI ainda não expressa todos os validadores personalizados e respostas 404 deste contrato."
   },
   "servers": [
     {
       "url": "http://127.0.0.1:8000",
-      "description": "Endereço local previsto para a implementação"
+      "description": "Endereço local após iniciar a aplicação conforme o README"
     }
   ],
   "tags": [

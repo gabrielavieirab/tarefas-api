@@ -1,94 +1,123 @@
-# Minha contribuição - entrega inicial
+# Contribuição de Vitor - entrega 2
 
-Nesta contribuição, preparei a especificação e as decisões técnicas da
-[Issue #1](https://github.com/gabrielavieirab/tarefas-api/issues/1), na branch
-`feature/especificacao-sdd`, para integração em `develop` por PR.
+Atualização: 15/10/2026. Responsável: Vitor de Assis Patricio Borges,
+RA 22304737. Branch: `codex/documentacao-entrega2`, baseada na `develop`
+no commit `1b6294a`. A versão publicada da `main` consultada foi `8ecaf5f`;
+as bases têm a mesma aplicação e os mesmos testes. A diferença de CI da `main`
+é registrada separadamente nas evidências.
 
-## Materiais que preparei
+Rastreabilidade: [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22).
+Publicação: [PR #25 para develop](https://github.com/gabrielavieirab/tarefas-api/pull/25).
 
-- `especificacao_sdd.md`: problema, escopo, requisitos funcionais e não funcionais,
-  modelo, regras e exemplos das quatro operações.
-- `decisoes_tecnicas.md`: escolha e justificativa das tecnologias, quatro ADRs,
-  arquitetura, componentes e interfaces para desenvolvimento e testes.
-- `openapi.json`: contrato HTTP 3.1.0, com entradas, saídas, erros e exemplos.
-- `criterios_aceitacao.md`: cenários rastreáveis para Felipe e Caike.
-- `refinamentos.md`: origem das decisões iniciais e registro de feedback futuro.
-- `../README.md`: resumo técnico e links para a documentação, como contribuição
-  à consolidação final de Gabriela.
+## Escopo da contribuição
 
-Todos os documentos descrevem a proposta técnica, sujeita à revisão dos colegas.
-O OpenAPI é um contrato estático elaborado antes da implementação; depois, a
-documentação gerada pelo FastAPI deve ser conferida contra ele. No cadastro e na
-edição, o contrato permite espaços nas extremidades do título e limita o conteúdo
-após normalização; essa transformação precisa ser refletida na validação da aplicação.
+Consolidar a especificação, a arquitetura e a comunicação técnica da API
+implementada, conforme a divisão da equipe para a etapa intermediária.
+O contrato continua na versão 1.1.0: quatro operações HTTP, uma tabela,
+três campos, edição de título e conclusão sem reabertura.
 
-Na versão 1.1.0, incluí a edição do texto da tarefa no PATCH, com preservação de ID
-e campos omitidos. Mantive quatro operações HTTP e acrescentei cinco cenários,
-totalizando 31 critérios de aceitação.
+Materiais atualizados:
 
-## Como as responsabilidades se conectam
+- [README](../README.md): instalação, execução, testes, Docker, rotas,
+  equipe, fluxo, CI e links da documentação.
+- [Arquitetura](arquitetura.md): diagrama versionado, módulos implementados,
+  sessões, inicialização, persistência e isolamento dos testes.
+- [Decisões técnicas](decisoes_tecnicas.md): consolidação dos ADRs de API,
+  banco, validação, ambiente e governança, com defesa das escolhas e limitações.
+- [Especificação SDD](especificacao_sdd.md): estado integrado e tecnologias
+  efetivas, preservando requisitos e contratos existentes.
+- [OpenAPI estático](openapi.json): atualização das descrições de contexto,
+  sem mudança de operações, esquemas ou códigos HTTP.
+- [Critérios de aceitação](criterios_aceitacao.md): vínculo dos 31 critérios
+  com a suíte existente e com a execução integrada.
+- [Refinamentos](refinamentos.md): integração, evolução dos testes, correção
+  do CI e ajustes documentais rastreados em REF-07 a REF-12.
+- [Evidências de testes](evidencias_testes.md): acréscimo da verificação de
+  15/10/2026, preservando o relatório histórico de setembro.
+- [Relato técnico](relato_experiencia_vitor.md): contribuição para a seção de
+  aprendizados e desafios, baseada nos registros do projeto.
+- [Revisão da análise de IA](revisao_ia_vitor.md): parecer assistido sobre a
+  versão de Gabriela, com ajustes necessários e a contribuição factual de Vitor.
 
-**Gabriela** usa a especificação e os ADRs para alinhar as instruções da IA e
-consolidar README/PDF. Ela mantém a organização do repositório e a documentação
-do uso real da ferramenta. A seção adicionada ao README dá acesso à parte técnica;
-os comandos e as evidências serão complementados nas tarefas correspondentes.
+## Validação desta atualização
 
-**Felipe** implementa os componentes e as quatro rotas com base nos contratos.
-Deve revisar principalmente edição parcial no PATCH, normalização do título,
-persistência, campos extras e os códigos HTTP antes da implementação.
+O pull de `main` incorporou aplicação, testes, Docker, CI e evidências da
+entrega inicial. A atualização documental não altera `app/`, `tests/`,
+`pyproject.toml`, Dockerfile ou workflow.
 
-**Caike** prepara dependências, container, testes e CI. Usa os critérios de aceitação
-e valida o isolamento do banco. A escolha de Python 3.12 e o comando de instalação
-de `AGENTS.md` orientam sua configuração; as versões exatas ficam registradas
-quando ele validar o conjunto integrado.
-
-**Minha responsabilidade:** manterei contratos e decisões coerentes, esclarecerei
-dúvidas e registrarei mudanças motivadas por revisão ou testes. A implementação, os testes, o Dockerfile,
-o workflow e o PDF de submissão permanecem nas tarefas dos responsáveis definidos.
-
-## Validação desta contribuição
-
-Em 05/09/2026, validei o contrato com `openapi-spec-validator` 0.9.0:
+Com o ambiente virtual local:
 
 ```text
-python -m openapi_spec_validator docs/openapi.json
-docs/openapi.json: OK
+python -m pip install -e ".[test]"
+python -m pip check
+python -m pytest tests -v --junitxml=test-results/pytest.xml
 ```
 
-Na versão 1.1.0, conferi 75 exemplos válidos e inválidos dos esquemas de cadastro
-e atualização, incluindo edição isolada, conclusão isolada, edição e conclusão
-juntas, campos omitidos, `null`, limites do título e campos extras. Conferi também
-os 12 exemplos embutidos no OpenAPI, a ausência de conteúdo no `204`, as quatro
-operações e os 12 links internos dos documentos.
-São verificações do contrato estático, não testes HTTP de uma aplicação implementada.
-Instalei as ferramentas de validação em ambiente temporário separado,
-sem definir as dependências da aplicação que Caike vai preparar.
+Resultado em Windows com Python 3.12.6: ambiente sem dependências quebradas,
+**80 testes aprovados, um aviso de descontinuação, zero falhas e zero ignorados**.
+O relatório XML está em `test-results/pytest.xml`, ignorado pelo Git.
 
-Também executei `pytest --ignore=tmp --ignore=output -p no:cacheprovider`,
-conforme a instrução de executar pytest antes do PR. Resultado: `collected 0 items`
-e `no tests ran`. Não existe suíte da API na base consultada; esse resultado
-não comprova aprovação de testes nem conclusão do harness da entrega.
+A [execução pública da main](https://github.com/gabrielavieirab/tarefas-api/actions/runs/38781864191),
+com Python 3.12.10 e base `8ecaf5f`, aprovou testes no runner, build Docker,
+testes no container e publicação dos relatórios. Docker não estava disponível
+neste ambiente local; essa evidência remota não é apresentada como build local.
+A CI da nova contribuição é acompanhada nos checks do
+[PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25), separadamente
+da execução histórica da `main`.
 
-## Conclusão da minha parte
+## Integração anterior e revisão
 
-- [x] Descrevi o problema, o escopo e os requisitos.
-- [x] Defini os campos, as regras, as entradas, as saídas e os códigos HTTP.
-- [x] Justifiquei as tecnologias e separei os componentes.
-- [x] Preparei os critérios de aceitação e o registro de refinamentos.
-- [ ] PR revisado por Felipe e Caike, como exige a Issue #1.
-- [ ] Tratarei e registrarei o feedback real da revisão.
-- [ ] PR aprovado e integrado em `develop` pelo fluxo do grupo.
+Minha contribuição inicial foi integrada pelo
+[PR #12](https://github.com/gabrielavieirab/tarefas-api/pull/12).
+A aplicação veio pelo [PR #14](https://github.com/gabrielavieirab/tarefas-api/pull/14),
+os testes e o ambiente pelo [PR #15](https://github.com/gabrielavieirab/tarefas-api/pull/15),
+as evidências pelo [PR #16](https://github.com/gabrielavieirab/tarefas-api/pull/16)
+e a publicação em `main` pelo
+[PR #17](https://github.com/gabrielavieirab/tarefas-api/pull/17).
+As Issues [#1](https://github.com/gabrielavieirab/tarefas-api/issues/1) e
+[#9](https://github.com/gabrielavieirab/tarefas-api/issues/9) estão fechadas.
 
-Depois da integração das outras contribuições, também participarei da
-[Issue #9](https://github.com/gabrielavieirab/tarefas-api/issues/9), conferindo rotas,
-testes e especificação. Essa revisão futura depende de código e evidências que
-ainda serão produzidos; não está marcada como concluída nesta documentação.
+Na consulta de 15/10/2026, o PR #12 não possui review formal registrado.
+Seu merge não é tratado como comprovação de aprovação individual de Felipe
+ou Caike. Para a etapa 2, **Felipe é o revisor principal** da documentação;
+**Gabriela confere clareza e aderência** aos critérios da atividade.
 
-## Roteiro de revisão para os colegas
+## Dependências e pendências da equipe
 
-1. Ler a seção de regras e os contratos em `especificacao_sdd.md`.
-2. Conferir as escolhas e a decomposição em `decisoes_tecnicas.md`.
-3. Verificar os casos de borda em `criterios_aceitacao.md`.
-4. Comentar no PR qualquer dificuldade concreta ou regra ambígua.
-5. Ajustarei os documentos afetados e registrarei o feedback.
-6. Aprovar o PR quando os pontos estiverem resolvidos; não fazer merge sem revisão.
+- Felipe confere a documentação contra sua auditoria da API e registra erros
+  ou correções reais; não são inventados defeitos para preencher o relatório.
+- Caike confirma comandos, versões, CI e persistência operacional do volume Docker.
+- Gabriela consolida governança, análise crítica de IA e o PDF de submissão.
+- A revisão assistida da análise de IA e o relato técnico de Vitor estão
+  preparados nos documentos vinculados acima. A análise final ainda depende
+  da consolidação de Gabriela e das experiências dos demais integrantes;
+  sua homologação humana não é inferida desta preparação.
+- A equipe revisa o PDF final e os links antes do envio individual.
+
+Pontos técnicos explicitados nesta atualização: ausência de lock transitivo,
+diferença do patch Python local, necessidade de conferir o volume Docker e
+metadados incompletos no OpenAPI gerado. Eles não autorizam ampliar o escopo
+nem mudar regras sem especificação e testes.
+
+## Checklist da contribuição da etapa 2
+
+- [x] Documentação atualizada para a aplicação integrada.
+- [x] README com comandos de instalação, execução e testes.
+- [x] Diagramas de arquitetura e fluxo versionados nos documentos.
+- [x] ADRs consolidados, com justificativas e limitações.
+- [x] Refinamentos e evidências existentes registrados com rastreabilidade.
+- [x] Suíte oficial executada: 80 testes aprovados.
+- [x] Relato técnico preparado para o relatório consolidado.
+- [x] Revisão assistida da análise de IA registrada, com observações e evidências.
+- [x] Branch enviada ao GitHub e PR #25 aberto para `develop`, com checks públicos vinculados.
+- [ ] Revisão de Felipe e conferência de Gabriela registradas.
+- [ ] Ajustes da revisão tratados e contribuição integrada pelo fluxo da equipe.
+
+## Histórico da entrega inicial
+
+Em 05/09/2026, a proposta técnica foi preparada na branch
+`feature/especificacao-sdd`, com especificação, quatro ADRs, contrato estático
+e 31 critérios de aceitação. A validação do OpenAPI e de seus exemplos naquele
+momento era uma verificação do contrato; ainda não havia suíte HTTP na base
+consultada. O resultado histórico `no tests ran` não representa o estado atual.
+A evolução posterior está em [Refinamentos](refinamentos.md).

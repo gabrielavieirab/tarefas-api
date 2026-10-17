@@ -2,11 +2,15 @@
 
 Eu, Vitor (@vitorborges10), sou o responsável por esta especificação.
 
-**Versão:** 1.1.0. **Data:** 05/09/2026.
+**Versão do contrato:** 1.1.0, de 05/09/2026.
+**Atualização documental:** 15/10/2026, para a entrega 2.
 
-**Estado:** proposta técnica pronta para revisão por Felipe e Caike.
+**Estado:** contrato implementado na base `8ecaf5f` da `main`, com suíte de
+80 testes aprovada. A consolidação documental da entrega 2 aguarda revisão
+dos colegas; não há alteração de comportamento nesta atualização.
 
 **Rastreabilidade:** [Issue #1](https://github.com/gabrielavieirab/tarefas-api/issues/1).
+Consolidação da entrega 2: [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22).
 
 ## 1. Problema e objetivo
 
@@ -23,7 +27,7 @@ implementar, testar e revisar colaborativamente.
 SDD (Spec-Driven Development) significa que o comportamento é descrito e revisado
 antes de orientar a geração de código, a implementação e os testes.
 
-## 2. Escopo da entrega inicial
+## 2. Escopo funcional mantido na entrega 2
 
 Inclui exatamente quatro operações HTTP: cadastrar, listar, atualizar e excluir
 tarefas. A atualização permite editar o texto (`titulo`), marcar como concluída
@@ -37,8 +41,10 @@ consulta individual por GET, relacionamentos e cálculos. A página de documenta
 automática do FastAPI é uma ferramenta de apoio, não uma quinta operação de negócio.
 
 O fluxo de GitHub, as instruções de IA, o ambiente, a suíte e as evidências continuam
-fazendo parte da entrega do grupo. As três entregas da disciplina serão tratadas
-por etapas; esta especificação cobre apenas a inicial.
+fazendo parte da entrega do grupo. Na entrega 2, a equipe consolida a implementação,
+o refinamento por testes, a governança, a defesa técnica e a análise de IA.
+O contrato funcional permanece o da versão 1.1.0; esses trabalhos não acrescentam
+rotas, campos ou regras de negócio.
 
 ## 3. Tecnologias e decisões
 
@@ -47,11 +53,13 @@ síncrono ao banco. Para validação, usar pytest, TestClient do FastAPI e HTTPX
 Padronizar o ambiente com `venv`/pip, `pyproject.toml` e Docker; executar a suíte
 também no GitHub Actions.
 
-As versões exatas compatíveis das dependências e a imagem do container devem ser
-fixadas por Caike após a primeira execução integrada, seguindo o
-[ADR-004](decisoes_tecnicas.md). Esta proposta define
-a linha de tecnologias; não afirma que um conjunto de pacotes já foi instalado
-ou validado na aplicação.
+As dependências diretas estão fixadas em `pyproject.toml`: FastAPI 0.141.1,
+Uvicorn 0.52.4, Pydantic 2.13.5, SQLAlchemy 2.0.52, pytest 9.1.1 e HTTPX 0.28.1.
+O Docker usa `python:3.12.10-slim` e o CI configura Python 3.12.10.
+Ainda não há lock das dependências transitivas nem digest da imagem; o
+[ADR-004](decisoes_tecnicas.md) registra esse limite da reprodução do ambiente.
+As execuções efetivamente realizadas estão em
+[Evidências de testes e CI](evidencias_testes.md).
 
 As justificativas e a decomposição dos componentes estão em
 [Decisões técnicas](decisoes_tecnicas.md).
@@ -159,8 +167,8 @@ A validação do limite do título é responsabilidade da aplicação: declarar 
 
 ## 8. Contratos HTTP
 
-Endereço local previsto: `http://127.0.0.1:8000`. Esta é uma convenção para a
-configuração futura, não a indicação de um serviço atualmente em execução.
+Endereço local: `http://127.0.0.1:8000`, após iniciar a aplicação com os comandos
+do [README](../README.md). A documentação Swagger fica em `/docs`.
 As rotas canônicas não têm barra final.
 
 ### POST /tarefas
@@ -283,10 +291,23 @@ Falhas inesperadas não devem ser convertidas em sucesso nem expor detalhes do b
 ## 9. Critérios de aceitação e evolução
 
 [Critérios de aceitação](criterios_aceitacao.md) relaciona cada cenário ao requisito
-ou regra correspondente. Caike implementará os testes; Felipe usará os mesmos
-critérios para a API. A especificação e [OpenAPI](openapi.json) devem ser alterados
-no mesmo PR sempre que um contrato mudar.
+ou regra correspondente. A implementação de Felipe está em `app/`; a suíte
+consolidada por Caike está em `tests/`. As contribuições foram integradas pelos
+[PRs #14](https://github.com/gabrielavieirab/tarefas-api/pull/14) e
+[#15](https://github.com/gabrielavieirab/tarefas-api/pull/15).
+A especificação e [OpenAPI estático](openapi.json) devem ser alterados
+no mesmo PR sempre que um contrato mudar. A atualização de 15/10/2026 mantém
+as regras e os 31 critérios de aceitação existentes.
 
 Revisões do grupo e resultados reais dos testes devem ser registrados em
 [Refinamentos](refinamentos.md), com motivo, impacto e link da evidência.
-Esta versão não declara aprovação dos colegas nem execução da suíte da API.
+O relatório de [testes e CI](evidencias_testes.md) distingue a execução local
+de 15/10/2026, a execução pública da base integrada e as limitações operacionais.
+
+**Limitação de documentação automática:** `/openapi.json` é gerado pelo FastAPI
+a partir dos esquemas e rotas. Validadores personalizados aplicam normalização,
+limite do título, proibição de `null`, conclusão apenas com `true` e PATCH não
+vazio, mas esses detalhes não são todos expressos no esquema gerado. As respostas
+404 também não estão todas declaradas nele. O contrato estático preserva essas
+regras; completar os metadados da documentação automática permanece uma pendência
+de documentação em relação ao RNF-07, sem modificar o comportamento para contorná-la.
