@@ -23,7 +23,9 @@ _ID_TAREFA = Path(
     description="Inteiro positivo de 64 bits.",
 )
 
-_TAREFA_NAO_ENCONTRADA = "Tarefa não encontrada."
+# Mensagem única, lida do próprio schema do erro 404 (schemas.py) para que
+# a documentação automática e o corpo de resposta real nunca divirjam.
+_TAREFA_NAO_ENCONTRADA = TarefaNaoEncontrada.model_fields["detail"].default
 
 
 @router.post(
