@@ -5,7 +5,7 @@ exigindo pelo menos um; campos extras e `null` explícito são rejeitados.
 """
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 
 def _validar_titulo(valor: Any) -> str:
