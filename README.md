@@ -235,7 +235,6 @@ Integrações já realizadas:
 - [Critérios de aceitação](docs/criterios_aceitacao.md): cenários e vínculo com a suíte.
 - [Refinamentos](docs/refinamentos.md): evolução da especificação e evidências.
 - [Validação técnica final](docs/validacao-tecnica-final.md): verificações realizadas e pendências de fechamento.
-- [Roteiro de demonstração da arquitetura](docs/roteiro-demonstracao-arquitetura.md): sequência de apresentação técnica.
 - [Consolidação técnica da entrega 2](docs/consolidacao-tecnica-entrega2.md): histórico da revisão documental.
 - [Relato técnico da entrega 2](docs/relato-tecnico-entrega2.md): evolução da especificação e decisões de implementação.
 - [Revisão da análise de IA](docs/revisao-analise-ia.md): observações técnicas e evidências de uso.

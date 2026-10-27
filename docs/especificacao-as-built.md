@@ -254,5 +254,4 @@ nesse sentido exigem nova especificação. As decisões e consequências estão 
 
 A [validação técnica final](validacao-tecnica-final.md) reúne as verificações
 realizadas e as pendências de fechamento. A revisão do PDF depende da versão
-consolidada. O [roteiro de demonstração](roteiro-demonstracao-arquitetura.md)
-descreve a apresentação da arquitetura e da documentação.
+consolidada.

@@ -232,12 +232,10 @@ da base integrada concluída com sucesso. Comandos e limites nas
 **REF-17 - Preparar a comunicação técnica final.**
 
 **Decisão:** registrar a [validação técnica](validacao-tecnica-final.md) dos documentos
-conferidos e o [roteiro de vídeo](roteiro-demonstracao-arquitetura.md). Distinguir contrato
-1.1.0, pacote 0.1.0 e Release prevista v1.0.0. **Impacto:** consolidação
-da documentação de encerramento. **Limite:** o PDF final ainda não foi fornecido
-para inspeção e o roteiro não equivale a uma gravação realizada. Revisão humana
-do PR e conferência do PDF continuam pendentes. O roteiro técnico apoia a
-gravação integral do vídeo por Gabriela, conforme a organização atual da equipe.
+conferidos. Distinguir contrato 1.1.0, pacote 0.1.0 e Release prevista v1.0.0.
+**Impacto:** consolidação da documentação de encerramento. **Limite:** o PDF final
+ainda não foi fornecido para inspeção. Revisão humana do PR e conferência do PDF
+continuam pendentes. A gravação integral do vídeo fica com Gabriela.
 
 ## Como registrar os próximos ajustes
 

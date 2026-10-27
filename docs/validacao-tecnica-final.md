@@ -20,7 +20,6 @@ registram a validação desta revisão, separadamente da CI da base.
   testes, cobertura e Docker.
 - [Evidências](evidencias_testes.md#entrega-final--27102026) e
   [refinamentos](refinamentos.md): resultados e evolução da especificação.
-- [Roteiro de demonstração da arquitetura](roteiro-demonstracao-arquitetura.md).
 
 A [consolidação técnica da entrega 2](consolidacao-tecnica-entrega2.md) preserva
 o histórico. A especificação final permanece em um único As-Built, atualizado
@@ -64,5 +63,4 @@ resultados, distinguindo aprovação dos testes de cobertura do código.
   verificando dados técnicos, figuras e links de Release, vídeo e resultados.
 
 A versão final do PDF ainda não foi inspecionada nesta revisão.
-A gravação integral e a publicação do vídeo ficam com Gabriela, com apoio do
-[roteiro técnico](roteiro-demonstracao-arquitetura.md).
+A gravação integral e a publicação do vídeo ficam com Gabriela.
