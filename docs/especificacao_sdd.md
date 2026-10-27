@@ -1,7 +1,5 @@
 # Especificação SDD — contrato implementado da API de tarefas
 
-Eu, Vitor (@vitorborges10), sou o responsável por esta especificação.
-
 **Versão do contrato:** 1.1.0, de 05/09/2026.
 **Atualização documental:** 27/10/2026, para a Entrega Final.
 
@@ -297,8 +295,8 @@ Falhas inesperadas não devem ser convertidas em sucesso nem expor detalhes do b
 ## 9. Critérios de aceitação e evolução
 
 [Critérios de aceitação](criterios_aceitacao.md) relaciona cada cenário ao requisito
-ou regra correspondente. A implementação de Felipe está em `app/`; a suíte
-consolidada por Caike está em `tests/`. As contribuições foram integradas pelos
+ou regra correspondente. A implementação está em `app/` e a suíte oficial
+em `tests/`. Esses componentes foram integrados pelos
 [PRs #14](https://github.com/gabrielavieirab/tarefas-api/pull/14) e
 [#15](https://github.com/gabrielavieirab/tarefas-api/pull/15).
 A especificação e [OpenAPI estático](openapi.json) devem ser alterados

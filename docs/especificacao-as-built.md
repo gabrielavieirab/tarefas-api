@@ -1,8 +1,7 @@
 # Especificação técnica As-Built — Entrega Final
 
-Atualização: **27/10/2026**. Responsável técnico: **Vitor de Assis Patricio
-Borges, RA 22304737 (@vitorborges10)**. Este documento consolida a base iniciada
-por Gabriela no [PR #30](https://github.com/gabrielavieirab/tarefas-api/pull/30).
+Atualização: **27/10/2026**. Este documento consolida a base documental
+integrada pelo [PR #30](https://github.com/gabrielavieirab/tarefas-api/pull/30).
 
 Base conferida: `develop` no commit
 [`668faae`](https://github.com/gabrielavieirab/tarefas-api/commit/668faae7bdc54024c1b7c75ca483aa9adfe21d8d).
@@ -235,7 +234,7 @@ de 81 casos; não há teste de OpenAPI/Swagger nessa suíte.
   [`5c252e7`](https://github.com/gabrielavieirab/tarefas-api/commit/5c252e7201ac872bee99c16ab9d05a8407c33d7a)
   integrou a cobertura no runner e no Docker. A proposta de lock transitivo não
   foi adotada; `pytest-cov` também está sem pin e a imagem não tem digest.
-- **Consolidação:** o PR #30 integrou a base documental de Gabriela. Esta revisão
+- **Consolidação:** o PR #30 integrou a base documental. Esta revisão
   completa o As-Built, vincula os documentos existentes e registra evidências;
   não altera código, testes, dependências ou infraestrutura.
 
@@ -253,7 +252,7 @@ Não há requisito de alta concorrência/SLA, autenticação ou migrações; mud
 nesse sentido exigem nova especificação. As decisões e consequências estão nos
 [ADRs revisados](decisoes_tecnicas.md).
 
-A [contribuição de Vitor](entrega3_vitor.md) reúne o parecer técnico, o roteiro do
-vídeo e o checklist. A revisão do PDF depende de Gabriela disponibilizar a versão
-final. Aprovação humana, publicação da Release e submissão são etapas da equipe,
-não resultados inferidos desta conferência documental.
+A [validação técnica final](validacao-tecnica-final.md) reúne as verificações
+realizadas e as pendências de fechamento. A revisão do PDF depende da versão
+consolidada. O [roteiro de demonstração](roteiro-demonstracao-arquitetura.md)
+descreve a apresentação da arquitetura e da documentação.

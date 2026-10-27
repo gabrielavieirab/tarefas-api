@@ -4,7 +4,7 @@ Decisões registradas inicialmente em 05/09/2026 e revisadas em 27/10/2026.
 Estado: **escolhas conferidas na base `668faae` da develop**, consolidada na
 [especificação As-Built](especificacao-as-built.md). As decisões são mantidas;
 esta revisão registra sua implementação e seus limites. A aprovação humana
-desta contribuição será registrada no respectivo PR.
+desta revisão será registrada no respectivo PR.
 ADR significa registro de uma decisão arquitetural: contexto, escolha, justificativa
 e consequências. As escolhas priorizam facilidade de aprendizado, execução e
 verificação no escopo acadêmico, preservando as tecnologias do `AGENTS.md`.
@@ -160,9 +160,9 @@ além de apresentar código e testes funcionando.
 
 **Decisão.** Trabalhar por Issue e branch própria, integrar por PR para
 `develop`, executar a CI e obter revisão de outro integrante antes do merge.
-A versão estável chega a `main` por PR de integração. Vitor prepara a
-documentação técnica; Felipe revisa o conteúdo e Gabriela confere a aderência
-à atividade. Uma ferramenta de IA não substitui essa aprovação humana.
+A versão estável chega a `main` por PR de integração. A documentação passa
+por revisão técnica de aderência ao código e por conferência dos requisitos
+da entrega. Uma ferramenta de IA não substitui essa aprovação humana.
 
 **Justificativa.** O PR concentra o diff, a discussão e o resultado dos testes.
 Relacionar cada mudança ao contrato e ao teste permite explicar por que ela

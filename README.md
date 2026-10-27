@@ -13,7 +13,7 @@ autenticação, filtros, paginação ou reabertura de tarefas.
 Atualização técnica: **27/10/2026**, sobre a `develop` em
 [`668faae`](https://github.com/gabrielavieirab/tarefas-api/commit/668faae7bdc54024c1b7c75ca483aa9adfe21d8d).
 Essa base incorpora a auditoria, as respostas 404 na documentação automática,
-a cobertura no CI e a documentação inicial do PR #30 de Gabriela. A
+a cobertura no CI e a documentação inicial do PR #30. A
 [especificação As-Built](docs/especificacao-as-built.md) descreve a implementação.
 
 A validação local terminou com **81 testes aprovados, um aviso de descontinuação
@@ -210,8 +210,8 @@ são publicados no artefato `resultados-testes`. Não há deploy automático.
 
 O fluxo da equipe é Issue, branch de trabalho, commits, PR para `develop`,
 revisão por outro integrante, CI e integração. A publicação estável passa por
-PR de `develop` para `main`. Para a documentação de Vitor, Felipe é o revisor
-principal e Gabriela verifica clareza e aderência à atividade.
+PR de `develop` para `main`. A revisão técnica verifica a aderência ao código;
+a revisão documental confere a clareza e os requisitos da entrega.
 
 Integrações já realizadas:
 
@@ -234,11 +234,11 @@ Integrações já realizadas:
 - [Contrato OpenAPI estático](docs/openapi.json): contrato de aceitação versionado.
 - [Critérios de aceitação](docs/criterios_aceitacao.md): cenários e vínculo com a suíte.
 - [Refinamentos](docs/refinamentos.md): evolução da especificação e evidências.
-- [Entrega Final de Vitor](docs/entrega3_vitor.md): entregáveis, parecer técnico e pendências.
-- [Roteiro de Vitor para o vídeo](docs/roteiro-video-vitor.md): arquitetura e documentação em 45 a 60 segundos.
-- [Contribuição anterior de Vitor](docs/entrega_vitor.md): histórico da etapa 2.
-- [Relato técnico de Vitor](docs/relato_experiencia_vitor.md): texto para a comunicação técnica do relatório.
-- [Revisão da análise de IA](docs/revisao_ia_vitor.md): parecer assistido e contribuição factual de Vitor.
+- [Validação técnica final](docs/validacao-tecnica-final.md): verificações realizadas e pendências de fechamento.
+- [Roteiro de demonstração da arquitetura](docs/roteiro-demonstracao-arquitetura.md): sequência de apresentação técnica.
+- [Consolidação técnica da entrega 2](docs/consolidacao-tecnica-entrega2.md): histórico da revisão documental.
+- [Relato técnico da entrega 2](docs/relato-tecnico-entrega2.md): evolução da especificação e decisões de implementação.
+- [Revisão da análise de IA](docs/revisao-analise-ia.md): observações técnicas e evidências de uso.
 - [Análise crítica de IA](docs/analise-critica-ia.md): texto de Gabriela em consolidação.
 - [Governança da entrega 2](docs/governanca-entrega2.md): organização e critérios do grupo.
 - [Evidências de testes e CI](docs/evidencias_testes.md): execuções e limites da validação.

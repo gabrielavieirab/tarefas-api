@@ -6,7 +6,7 @@ Base: `develop` em `668faae7bdc54024c1b7c75ca483aa9adfe21d8d`.
 Branch documental: `codex/documentacao-entrega3`. A aplicação, os testes,
 as dependências e a infraestrutura permanecem iguais à base conferida.
 
-### Execução local de Vitor
+### Execução local
 
 Ambiente Windows, Python **3.12.6**, pytest **9.1.1**, pytest-cov **7.1.0**,
 coverage.py **7.17.0**. Instalação pelo extra `test` já declarado no projeto.
