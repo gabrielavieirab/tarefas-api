@@ -1,7 +1,6 @@
-# Contribuição de Vitor - entrega 2
+# Consolidação técnica — entrega 2
 
-Atualização: 15/10/2026. Responsável: Vitor de Assis Patricio Borges,
-RA 22304737. Branch: `codex/documentacao-entrega2`, baseada na `develop`
+Registro histórico de 15/10/2026. Branch: `codex/documentacao-entrega2`, baseada na `develop`
 no commit `1b6294a`. A versão publicada da `main` consultada foi `8ecaf5f`;
 as bases têm a mesma aplicação e os mesmos testes. A diferença de CI da `main`
 é registrada separadamente nas evidências.
@@ -9,7 +8,7 @@ as bases têm a mesma aplicação e os mesmos testes. A diferença de CI da `mai
 Rastreabilidade: [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22).
 Publicação: [PR #25 para develop](https://github.com/gabrielavieirab/tarefas-api/pull/25).
 
-## Escopo da contribuição
+## Escopo da consolidação
 
 Consolidar a especificação, a arquitetura e a comunicação técnica da API
 implementada, conforme a divisão da equipe para a etapa intermediária.
@@ -34,10 +33,10 @@ Materiais atualizados:
   do CI e ajustes documentais rastreados em REF-07 a REF-12.
 - [Evidências de testes](evidencias_testes.md): acréscimo da verificação de
   15/10/2026, preservando o relatório histórico de setembro.
-- [Relato técnico](relato_experiencia_vitor.md): contribuição para a seção de
+- [Relato técnico](relato-tecnico-entrega2.md): contribuição para a seção de
   aprendizados e desafios, baseada nos registros do projeto.
-- [Revisão da análise de IA](revisao_ia_vitor.md): parecer assistido sobre a
-  versão de Gabriela, com ajustes necessários e a contribuição factual de Vitor.
+- [Revisão da análise de IA](revisao-analise-ia.md): parecer assistido sobre a
+  versão analisada, com ajustes necessários e registros verificáveis de uso.
 
 ## Validação desta atualização
 
@@ -67,7 +66,7 @@ da execução histórica da `main`.
 
 ## Integração anterior e revisão
 
-Minha contribuição inicial foi integrada pelo
+A especificação inicial foi integrada pelo
 [PR #12](https://github.com/gabrielavieirab/tarefas-api/pull/12).
 A aplicação veio pelo [PR #14](https://github.com/gabrielavieirab/tarefas-api/pull/14),
 os testes e o ambiente pelo [PR #15](https://github.com/gabrielavieirab/tarefas-api/pull/15),
@@ -88,7 +87,7 @@ ou Caike. Para a etapa 2, **Felipe é o revisor principal** da documentação;
   ou correções reais; não são inventados defeitos para preencher o relatório.
 - Caike confirma comandos, versões, CI e persistência operacional do volume Docker.
 - Gabriela consolida governança, análise crítica de IA e o PDF de submissão.
-- A revisão assistida da análise de IA e o relato técnico de Vitor estão
+- A revisão assistida da análise de IA e o relato técnico estão
   preparados nos documentos vinculados acima. A análise final ainda depende
   da consolidação de Gabriela e das experiências dos demais integrantes;
   sua homologação humana não é inferida desta preparação.
@@ -99,7 +98,7 @@ diferença do patch Python local, necessidade de conferir o volume Docker e
 metadados incompletos no OpenAPI gerado. Eles não autorizam ampliar o escopo
 nem mudar regras sem especificação e testes.
 
-## Checklist da contribuição da etapa 2
+## Verificações da etapa 2
 
 - [x] Documentação atualizada para a aplicação integrada.
 - [x] README com comandos de instalação, execução e testes.

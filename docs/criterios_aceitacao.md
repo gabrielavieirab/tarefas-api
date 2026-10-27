@@ -1,13 +1,15 @@
 # Critérios de aceitação
 
 Versão 1.1.0, vinculada à [especificação SDD](especificacao_sdd.md).
-Atualização documental: 15/10/2026. Os critérios orientaram a implementação
+Atualização documental: 27/10/2026. Os critérios orientaram a implementação
 da API por Felipe e a consolidação dos testes por Caike; o comportamento
-esperado permanece o mesmo na entrega 2.
+esperado permanece o mesmo na Entrega Final.
 
 Estes são **cenários especificados**. Os resultados das execuções estão em
-[Evidências de testes e CI](evidencias_testes.md): 80 testes aprovados na
-verificação local de 15/10/2026 e CI da base `8ecaf5f` aprovada, incluindo container.
+[Evidências de testes e CI](evidencias_testes.md): 81 testes aprovados na
+verificação local de 27/10/2026 e CI da base `668faae` aprovada, incluindo container.
+O caso explícito `test_ca14_corpo_json_vazio_e_rejeitado` foi acrescentado pelo
+PR #26; reforça o CA-14 existente, sem criar novo critério ou regra.
 Usar banco limpo por teste e IDs retornados pelo cadastro; não depender de IDs fixos.
 Quando o cenário precisar de tarefa concluída, prepará-la por uma requisição válida.
 
@@ -120,7 +122,7 @@ Quando o cenário precisar de tarefa concluída, prepará-la por uma requisiçã
   válido, esperar `404` e `{"detail":"Tarefa não encontrada."}`. Não criar uma
   tarefa; preservar os demais registros.
 
-## Rastreabilidade e revisão da entrega 2
+## Rastreabilidade e revisão da Entrega Final
 
 - CA-01 a CA-22, CA-25 e CA-27 a CA-31: cenários em `tests/test_tarefas.py`.
 - CA-23: `test_rf07_persistencia_entre_reinicializacoes`, com dois processos
@@ -131,7 +133,7 @@ Quando o cenário precisar de tarefa concluída, prepará-la por uma requisiçã
   os bancos temporários são removidos e a dependência de sessão é restaurada.
   A preparação e a limpeza ficam em [conftest.py](../tests/conftest.py).
 - CA-26: execução local documentada e
-  [CI da main](https://github.com/gabrielavieirab/tarefas-api/actions/runs/38781864191),
+  [CI da develop](https://github.com/gabrielavieirab/tarefas-api/actions/runs/40586231416),
   com testes no runner, build e testes no container aprovados. A conferência
   operacional da persistência do volume Docker segue com Caike.
 
@@ -142,7 +144,7 @@ A especificação foi integrada pelo
 Isso comprova o estado da integração, sem substituir uma evidência específica
 de revisão ou aprovação por cada colega.
 
-Na revisão documental da etapa 2, Felipe confere a aderência ao código,
+Na revisão documental final, Felipe confere a aderência ao código,
 Gabriela confere a clareza e Caike confere os comandos e evidências de ambiente.
 Novos comentários e decisões devem ser registrados em
 [Refinamentos](refinamentos.md), com os links correspondentes.
