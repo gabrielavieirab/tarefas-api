@@ -8,38 +8,35 @@ Todas as tarefas pertencem a uma lista compartilhada. Cada registro possui
 `id`, `titulo` e `concluida`. O escopo tem quatro operações HTTP, sem usuários,
 autenticação, filtros, paginação ou reabertura de tarefas.
 
-## Estado da entrega 2
+## Estado da Entrega Final
 
-A especificação, a aplicação, os testes, o Dockerfile e o workflow já estão
-integrados à `main`. A versão publicada conferida nesta atualização é o commit
-[`8ecaf5f`](https://github.com/gabrielavieirab/tarefas-api/commit/8ecaf5f890ecfa4c2c4bbcefa378c03139b73e0d).
-O PR documental é preparado sobre a `develop` em `1b6294a`, que já incorpora
-a estrutura de governança e análise de IA de Gabriela. A aplicação e os testes
-são os mesmos nas duas bases; a correção de CI de `8ecaf5f` está na `main`.
-A contribuição documental está publicada no
-[PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25), vinculado à
-[Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22), para revisão.
+Atualização técnica: **27/10/2026**, sobre a `develop` em
+[`668faae`](https://github.com/gabrielavieirab/tarefas-api/commit/668faae7bdc54024c1b7c75ca483aa9adfe21d8d).
+Essa base incorpora a auditoria, as respostas 404 na documentação automática,
+a cobertura no CI e a documentação inicial do PR #30 de Gabriela. A
+[especificação As-Built](docs/especificacao-as-built.md) descreve a implementação.
 
-Em 15/10/2026, a suíte local terminou com **80 testes aprovados e um aviso de
-descontinuação**, sem falhas. A
-[execução da main no GitHub Actions](https://github.com/gabrielavieirab/tarefas-api/actions/runs/38781864191)
-também aprovou os testes no runner, a construção da imagem e os testes no container.
-Os ambientes, comandos e limites dessas verificações estão em
-[Evidências de testes e CI](docs/evidencias_testes.md).
+A validação local terminou com **81 testes aprovados, um aviso de descontinuação
+e 91% de cobertura de linhas de `app/`**. A
+[CI da mesma base](https://github.com/gabrielavieirab/tarefas-api/actions/runs/40586231416)
+concluiu os testes no runner, o build e os testes Docker com sucesso. O percentual
+citado é local; ambientes, relatórios e limites estão nas
+[evidências](docs/evidencias_testes.md).
 
-A análise de IA, a auditoria da entrega 2, as revisões entre pares e o PDF
-consolidado são acompanhados pela equipe; os resultados acima não encerram
-essas atividades.
+O contrato da API continua em **1.1.0** e o pacote em **0.1.0**. A Release
+**v1.0.0** é a identificação prevista para a entrega acadêmica, distinta dessas
+versões. A coordenação da Release, do vídeo e do PDF final cabe a Gabriela;
+esta conferência não substitui o fechamento e a aprovação da equipe.
 
-## Equipe e responsabilidades na entrega 2
+## Equipe e responsabilidades na Entrega Final
 
 - **Vitor de Assis Patricio Borges - RA 22304737:** especificação, README,
-  arquitetura, decisões técnicas e refinamentos.
-- **Gabriela Vieira Baptista - RA 22510133:** coordenação, governança, análise
-  crítica de IA e relatório consolidado.
+  arquitetura final, As-Built, ADRs e revisão técnica do PDF.
+- **Gabriela Vieira Baptista - RA 22510133:** coordenação, Release, vídeo,
+  relatório/PDF e submissão final.
 - **Felipe Domingos Ribeiro Pereira - RA 22604250:** auditoria da implementação,
   correções e testes.
-- **Caike Ribeiro Menezes - RA 22601978:** ambiente, CI, Docker e evidências.
+- **Caike Ribeiro Menezes - RA 22601978:** Docker, CI, cobertura e evidências.
 
 ## Instalação local
 
@@ -60,9 +57,10 @@ Se a política do PowerShell impedir a ativação, use diretamente
 No Linux/macOS, crie o ambiente com `python3.12 -m venv .venv` e ative com
 `source .venv/bin/activate`; os comandos seguintes são os mesmos.
 
-As dependências diretas estão fixadas em [pyproject.toml](pyproject.toml):
+As dependências principais estão fixadas em [pyproject.toml](pyproject.toml):
 FastAPI 0.141.1, Uvicorn 0.52.4, Pydantic 2.13.5, SQLAlchemy 2.0.52,
-pytest 9.1.1 e HTTPX 0.28.1. Ainda não há lock das dependências transitivas;
+pytest 9.1.1 e HTTPX 0.28.1. `pytest-cov` está incluído no extra `test` sem pin.
+Ainda não há lock das dependências transitivas;
 uma instalação futura pode resolver versões diferentes delas.
 
 ## Executar a aplicação
@@ -134,10 +132,20 @@ a suíte. Os testes usam SQLite temporário e substituem a dependência de sess�
 verificam inclusive que o banco manual não é acessado nem alterado.
 
 Há cenários de cadastro, listagem, edição, conclusão, exclusão, validação,
-limites, persistência entre processos e isolamento. **80 testes aprovados**
+limites, persistência entre processos e isolamento. **81 testes aprovados**
 significa que todos os casos executados passaram; não é uma medição de 100%
 de cobertura do código. A rastreabilidade está nos
 [critérios de aceitação](docs/criterios_aceitacao.md).
+
+Para medir cobertura e salvar o XML:
+
+```powershell
+python -m pytest tests -v --cov=app --cov-report=term-missing --cov-report=xml:test-results/coverage.xml --junitxml=test-results/pytest.xml
+```
+
+Na execução local de 27/10/2026, 135 de 148 instruções foram cobertas (91%
+arredondados no terminal). A medição é de linhas, sem cobertura de branches.
+Os caminhos não medidos estão registrados nas evidências.
 
 ## Docker e persistência
 
@@ -158,6 +166,13 @@ Para executar a suíte dentro da imagem, sem iniciar o servidor:
 
 ```powershell
 docker run --rm tarefas-api:local python -m pytest tests -v
+```
+
+Para medir a cobertura no container e salvar os relatórios no PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Path test-results -Force | Out-Null
+docker run --rm -v "${PWD}/test-results:/resultados" tarefas-api:local python -m pytest tests -v --cov=app --cov-report=term-missing --cov-report=xml:/resultados/coverage-docker.xml --junitxml=/resultados/docker.xml
 ```
 
 Os testes usam bancos temporários e não precisam do volume da aplicação.
@@ -189,9 +204,9 @@ o ciclo de sessão e o fluxo de resposta.
 
 O [workflow de testes](.github/workflows/tests.yml) roda nos PRs para `develop`
 e `main` e nos pushes nessas branches. Ele instala o projeto, executa `pip check`,
-registra versões, roda pytest, constrói a imagem e testa no container.
-Os relatórios `pytest.xml` e `docker.xml` são publicados no artefato
-`resultados-testes`.
+roda pytest com cobertura, constrói a imagem e testa com cobertura no container.
+Os relatórios `pytest.xml`, `docker.xml`, `coverage.xml` e `coverage-docker.xml`
+são publicados no artefato `resultados-testes`. Não há deploy automático.
 
 O fluxo da equipe é Issue, branch de trabalho, commits, PR para `develop`,
 revisão por outro integrante, CI e integração. A publicação estável passa por
@@ -205,16 +220,23 @@ Integrações já realizadas:
 - [PR #15](https://github.com/gabrielavieirab/tarefas-api/pull/15): testes, Docker e CI.
 - [PR #16](https://github.com/gabrielavieirab/tarefas-api/pull/16): documentação e evidências funcionais.
 - [PR #17](https://github.com/gabrielavieirab/tarefas-api/pull/17): integração da entrega inicial em `main`.
+- [PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25): documentação técnica da entrega 2.
+- [PR #26](https://github.com/gabrielavieirab/tarefas-api/pull/26): documentação de 404 e teste explícito de PATCH vazio.
+- [PR #29](https://github.com/gabrielavieirab/tarefas-api/pull/29): auditoria final.
+- [PR #30](https://github.com/gabrielavieirab/tarefas-api/pull/30): base As-Built e retrospectiva.
 
 ## Documentação
 
 - [Especificação SDD](docs/especificacao_sdd.md): escopo, requisitos e contratos.
+- [Especificação As-Built](docs/especificacao-as-built.md): implementação conferida e diferenças do planejamento.
 - [Arquitetura e fluxo](docs/arquitetura.md): diagrama e componentes implementados.
 - [Decisões técnicas](docs/decisoes_tecnicas.md): ADRs, justificativas e limitações.
 - [Contrato OpenAPI estático](docs/openapi.json): contrato de aceitação versionado.
 - [Critérios de aceitação](docs/criterios_aceitacao.md): cenários e vínculo com a suíte.
 - [Refinamentos](docs/refinamentos.md): evolução da especificação e evidências.
-- [Contribuição de Vitor](docs/entrega_vitor.md): entregáveis e revisão da etapa 2.
+- [Entrega Final de Vitor](docs/entrega3_vitor.md): entregáveis, parecer técnico e pendências.
+- [Roteiro de Vitor para o vídeo](docs/roteiro-video-vitor.md): arquitetura e documentação em 45 a 60 segundos.
+- [Contribuição anterior de Vitor](docs/entrega_vitor.md): histórico da etapa 2.
 - [Relato técnico de Vitor](docs/relato_experiencia_vitor.md): texto para a comunicação técnica do relatório.
 - [Revisão da análise de IA](docs/revisao_ia_vitor.md): parecer assistido e contribuição factual de Vitor.
 - [Análise crítica de IA](docs/analise-critica-ia.md): texto de Gabriela em consolidação.
@@ -223,6 +245,7 @@ Integrações já realizadas:
 - [Evidências da entrega inicial](evidencias/README.md): registros visuais já publicados.
 
 O OpenAPI estático detalha regras que os validadores personalizados implementam.
-O esquema gerado em `/openapi.json` ainda não expõe todas essas restrições nem
-todas as respostas de erro; os dois arquivos não são idênticos. A especificação
-e os testes complementam a consulta ao Swagger.
+O esquema gerado em `/openapi.json` já declara os 404 de PATCH/DELETE, mas ainda
+não expõe todas as restrições dos validadores; os dois arquivos não são idênticos.
+A especificação e os testes complementam a consulta ao Swagger. A conferência
+OpenAPI descrita nas evidências é adicional à suíte automatizada.

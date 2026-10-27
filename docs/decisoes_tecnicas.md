@@ -1,9 +1,10 @@
 # Decisões técnicas e arquitetura
 
-Decisões registradas inicialmente em 05/09/2026 e consolidadas em 15/10/2026.
-Estado: **escolhas implementadas na base `8ecaf5f`; consolidação da entrega 2
-em revisão**. O registro da integração não equivale à aprovação individual de
-cada ADR por todos os colegas.
+Decisões registradas inicialmente em 05/09/2026 e revisadas em 27/10/2026.
+Estado: **escolhas conferidas na base `668faae` da develop**, consolidada na
+[especificação As-Built](especificacao-as-built.md). As decisões são mantidas;
+esta revisão registra sua implementação e seus limites. A aprovação humana
+desta contribuição será registrada no respectivo PR.
 ADR significa registro de uma decisão arquitetural: contexto, escolha, justificativa
 e consequências. As escolhas priorizam facilidade de aprendizado, execução e
 verificação no escopo acadêmico, preservando as tecnologias do `AGENTS.md`.
@@ -29,7 +30,7 @@ essa troca neste momento.
 
 **Consequências.** O grupo precisa conhecer modelos Pydantic e sessões do banco.
 Python 3.12 é a linha de referência do projeto. O container e o CI fixam
-3.12.10. A execução documental de 15/10/2026 usou 3.12.6, diferença registrada
+3.12.10. A execução documental de 27/10/2026 usou 3.12.6, diferença registrada
 nas evidências. FastAPI 0.141.1, Pydantic 2.13.5 e Uvicorn 0.52.4 estão
 fixados no `pyproject.toml` e são usados em `app/main.py` e `app/schemas.py`.
 
@@ -100,7 +101,11 @@ Essas regras são escolhas do projeto, não exigências adicionais do professor.
 **Limite conhecido.** Os validadores personalizados garantem essas regras na
 execução, mas o OpenAPI gerado pelo FastAPI não descreve todas elas. O contrato
 estático permanece a referência detalhada e a suíte verifica o comportamento.
-Completar os metadados do esquema gerado é uma pendência documental.
+As respostas 404 de PATCH/DELETE já estão declaradas no esquema gerado, após
+o PR #26. O PR #29 centralizou a mensagem do erro no valor padrão de
+`TarefaNaoEncontrada.detail`, reutilizado nas rotas. Completar os demais
+metadados dos validadores continua uma pendência documental; a conferência
+OpenAPI é registrada separadamente da suíte de testes.
 
 Fontes: [modo estrito do Pydantic](https://docs.pydantic.dev/latest/concepts/strict_mode/)
 e [validadores](https://docs.pydantic.dev/latest/concepts/validators/).
@@ -121,24 +126,28 @@ sem iniciar um servidor HTTP separado e atende às tarefas de ambiente e CI.
 
 **Implementação e ajuste da decisão.** O
 [PR #15](https://github.com/gabrielavieirab/tarefas-api/pull/15) integrou o
-ambiente, os testes e o CI. O `pyproject.toml` fixa as dependências diretas;
-Docker e CI fixam Python 3.12.10. O workflow instala o projeto, registra versões,
+ambiente, os testes e o CI. Docker e CI fixam Python 3.12.10. Na Entrega Final,
+o commit `5c252e7` acrescentou `pytest-cov` ao extra `test`, sem pin, e medição
+de cobertura no runner e no container. O workflow atual instala o projeto,
 executa `pip check`, testa no runner, constrói a imagem e testa no container.
-O commit `8ecaf5f` corrigiu a geração dos XML e a execução pública de
-15/10/2026 terminou com sucesso, incluindo o artefato `resultados-testes`.
+Publica `pytest.xml`, `docker.xml`, `coverage.xml` e `coverage-docker.xml`
+em `resultados-testes`. A
+[CI de 27/10/2026](https://github.com/gabrielavieirab/tarefas-api/actions/runs/40586231416)
+da base `668faae` concluiu esses passos com sucesso. Não há deploy automático.
 
 **Consequências.** A proposta inicial previa constraints/lock também para
 dependências transitivas. O estado integrado adotou apenas pins diretos, conforme
 registrado nas [evidências](evidencias_testes.md). Essa diferença é explicitada
-nesta consolidação: instalações não são idênticas por definição, pois transitivas
-e a tag da imagem sem digest podem variar. Fixação completa é uma melhoria futura
+nesta consolidação: instalações não são idênticas por definição, pois `pytest-cov`,
+as transitivas e a tag da imagem sem digest podem variar. Fixação completa é uma melhoria futura
 a avaliar com Caike; esta atualização não adiciona dependências ou outro lock.
 
 Para os testes, cada caso deve ter banco SQLite temporário limpo e descartável.
 A sobrescrita da dependência de sessão também precisa ser desfeita. A inicialização
 dos testes não deve criar ou acessar o banco de uso manual. Preferir arquivo
 temporário à memória compartilhada, para simplificar a configuração entre conexões.
-Não há necessidade inicial de Docker Compose, serviço de banco separado ou deploy.
+O projeto entregue não tem Docker Compose, serviço de banco separado ou deploy.
+Um container e um volume são suficientes para o escopo local documentado.
 
 Fontes: [teste de banco no FastAPI](https://fastapi.tiangolo.com/how-to/testing-database/),
 [testes do FastAPI](https://fastapi.tiangolo.com/tutorial/testing/) e
@@ -176,7 +185,7 @@ app/
   main.py           # cria a aplicação, inicializa o banco e registra as rotas
   database.py       # URL, engine e dependência de sessão
   models.py         # modelo SQLAlchemy Tarefa e metadados da tabela
-  schemas.py        # TarefaCreate, TarefaAtualizar e TarefaRead (Pydantic)
+  schemas.py        # entrada, saída e TarefaNaoEncontrada (Pydantic)
   crud.py           # criar, listar, atualizar e excluir no banco
   routes.py         # quatro operações HTTP e tradução de ausência para 404
 tests/
@@ -199,6 +208,7 @@ ou repositórios além desse módulo de operações.
 - `TarefaAtualizar`: `titulo` e/ou `concluida`, com pelo menos um campo;
   título normalizado e válido, booleano estrito com valor `true` e sem `null`.
 - `TarefaRead`: `id`, `titulo` e `concluida`; serialização de instância do ORM.
+- `TarefaNaoEncontrada`: schema do 404 e fonte da mensagem usada pelas rotas.
 - `criar_tarefa(sessao, titulo)`: recebe título já validado, persiste e retorna a tarefa.
 - `listar_tarefas(sessao)`: retorna lista ordenada por ID, incluindo concluídas.
 - `atualizar_tarefa(sessao, id, alteracoes)`: recebe um dicionário não vazio com
@@ -220,8 +230,9 @@ na facilidade de executar testes. O principal custo é aprender o básico de Pyd
 SQLAlchemy, Docker e PRs; limitar cada ferramenta ao escopo definido mantém esse
 custo controlado. A escolha não depende de contratar hospedagem ou banco externo.
 
-Os 80 testes aprovados e a execução de CI com container sustentam a viabilidade
-da solução no escopo atual. A defesa técnica considera também os custos:
+Os 81 testes aprovados em 27/10/2026 e a CI com container sustentam a viabilidade
+da solução no escopo atual. A cobertura local é 91% de linhas, não 100%.
+A defesa técnica considera também os custos:
 
 - FastAPI/Pydantic reduzem a configuração de validação e documentação, mas
   validadores personalizados precisam de testes e de metadados OpenAPI complementares.
@@ -233,8 +244,8 @@ da solução no escopo atual. A defesa técnica considera também os custos:
   omissão de `null` e preservar os demais campos. A reabertura permanece fora do escopo.
 - Docker e CI verificam instalação e execução em outro ambiente; isso não
   substitui revisão humana nem comprova por si só a persistência operacional do volume.
-- Pins diretos tornam explícitas as versões principais, mas a ausência de lock
-  transitivo limita a reprodução exata. A limitação deve acompanhar o relatório.
+- Pins das dependências principais tornam explícitas suas versões, mas `pytest-cov`
+  sem pin e a ausência de lock transitivo limitam a reprodução exata.
 
 Feedback novo, dificuldade de implementação ou mudança de requisito deve gerar
 um registro em [Refinamentos](refinamentos.md) antes de alterar o contrato.

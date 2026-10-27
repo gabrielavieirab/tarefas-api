@@ -1,32 +1,40 @@
 # Arquitetura e fluxo da aplicação
 
-Atualização: 15/10/2026. Descreve a implementação integrada na base `8ecaf5f`,
+Atualização: 27/10/2026. Descreve a implementação integrada na base `668faae`,
 mantendo o contrato 1.1.0 da [especificação SDD](especificacao_sdd.md).
-As justificativas estão nos [ADRs](decisoes_tecnicas.md).
+As justificativas estão nos [ADRs](decisoes_tecnicas.md), e o estado final está
+na [especificação As-Built](especificacao-as-built.md).
 
-## Fluxo de uma requisição
+## Diagrama final
+
+O [fonte Mermaid](diagramas/arquitetura-final.mmd) permite reutilizar o diagrama
+no relatório e na apresentação. As setas tracejadas representam configuração,
+mapeamento ou inicialização; as contínuas representam o fluxo da requisição.
 
 ```mermaid
 flowchart TD
-    Cliente[Cliente HTTP / Swagger] --> FastAPI[FastAPI e dependencias]
-    FastAPI --> Validacao[Pydantic: ID e corpo JSON]
-    Validacao -->|Entrada invalida| Erro422[HTTP 422 sem alterar registros]
-    Validacao -->|Entrada valida| Rotas[app/routes.py]
-    Rotas --> CRUD[app/crud.py]
-    CRUD --> ORM[SQLAlchemy e sessao da requisicao]
-    ORM --> Banco[(Arquivo SQLite)]
-    Banco --> Resultado[Registro, lista ou ausencia]
-    Resultado --> Rotas
-    Rotas -->|ID valido ausente| Erro404[HTTP 404]
-    Rotas -->|Criacao, consulta ou atualizacao| Saida[TarefaRead / lista de TarefaRead]
-    Saida --> JSON[HTTP 201 ou 200 com JSON]
-    Rotas -->|Exclusao confirmada| SemCorpo[HTTP 204 sem corpo]
+    Cliente["Cliente HTTP / Swagger"] --> API["FastAPI - app/main.py"]
+    API --> Validacao["FastAPI / Pydantic - ID e corpo"]
+    Validacao -->|Entrada invalida| Erro422["HTTP 422 - sem alterar registros"]
+    Validacao -->|Entrada valida| Rotas["app/routes.py - quatro operacoes"]
+    Config["app/database.py - engine e get_db"] -. Sessao por requisicao .-> Rotas
+    Rotas --> CRUD["app/crud.py - consultas e transacoes"]
+    CRUD --> ORM["SQLAlchemy - Session"]
+    Modelo["app/models.py - Tarefa"] -. Mapeamento .-> ORM
+    ORM <--> Banco[("SQLite - tabela tarefas")]
+    CRUD -->|Registro ou lista| Saida["TarefaRead - HTTP 201 ou 200 com JSON"]
+    CRUD -->|ID ausente em PATCH ou DELETE| Erro404["Rota retorna HTTP 404"]
+    CRUD -->|Exclusao confirmada| SemCorpo["Rota retorna HTTP 204 sem corpo"]
+    API -. Lifespan chama init_db .-> Config
+    Config -. create_all na inicializacao .-> Banco
 ```
 
 O diagrama representa as responsabilidades da aplicação; não detalha a ordem
 interna de resolução de cada dependência do FastAPI. A função da rota recebe
 ID e corpo já validados. Criar uma sessão não implica consultar ou alterar
-um registro antes da validação.
+um registro antes da validação. A saída do CRUD passa pela função da rota:
+ela serializa o objeto/lista ou transforma ausência em erro 404. As escritas
+fazem `commit` antes do sucesso; GET apenas consulta, sem `commit`.
 
 ## Componentes implementados
 
@@ -40,8 +48,11 @@ um registro antes da validação.
 - **`app/schemas.py`:** valida e normaliza o título, rejeita campos extras,
   exige pelo menos um campo no PATCH e aceita apenas `true` para conclusão.
   `TarefaRead` serializa os três campos a partir do objeto ORM.
+  `TarefaNaoEncontrada` descreve o 404 e fornece a mensagem usada pelas rotas.
 - **`app/routes.py`:** expõe as quatro operações, valida o intervalo do ID
-  e transforma ausência em `HTTPException(404)`.
+  e transforma ausência em `HTTPException(404)`. PATCH e DELETE declaram o
+  schema desse erro no OpenAPI; validadores de entrada ainda exigem a leitura
+  do contrato detalhado, pois seus metadados não são completos no Swagger.
 - **`app/crud.py`:** cria, lista por ID, busca, atualiza campos enviados e
   exclui registros. Escritas fazem `commit`; em falha de commit, fazem
   `rollback` e propagam o erro. Cadastro e atualização fazem `refresh`.

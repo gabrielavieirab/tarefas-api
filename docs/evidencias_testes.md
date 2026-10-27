@@ -1,5 +1,88 @@
 # Evidências de testes e CI
 
+## Entrega Final — 27/10/2026
+
+Base: `develop` em `668faae7bdc54024c1b7c75ca483aa9adfe21d8d`.
+Branch documental: `codex/documentacao-entrega3`. A aplicação, os testes,
+as dependências e a infraestrutura permanecem iguais à base conferida.
+
+### Execução local de Vitor
+
+Ambiente Windows, Python **3.12.6**, pytest **9.1.1**, pytest-cov **7.1.0**,
+coverage.py **7.17.0**. Instalação pelo extra `test` já declarado no projeto.
+O Python local difere do **3.12.10** selecionado no Docker e no CI.
+
+Comandos executados na raiz, usando `.venv/Scripts/python.exe`:
+
+```text
+python -m pip install -e ".[test]"
+python -m pip check
+python -m pytest tests -v --cov=app --cov-report=term-missing --cov-report=xml:test-results/entrega3-vitor/coverage.xml --junitxml=test-results/entrega3-vitor/pytest.xml
+```
+
+Resultado:
+
+```text
+No broken requirements found.
+collected 81 items
+TOTAL 148 statements, 13 missed, 91% covered
+81 passed, 1 warning in 11.41s
+```
+
+São zero falhas, erros ou casos ignorados. O aviso é a descontinuação do uso de
+HTTPX pelo TestClient do Starlette. Não foi ocultado. O relatório local contém:
+
+- `test-results/entrega3-vitor/pytest.log`: saída completa da execução.
+- `test-results/entrega3-vitor/pytest.xml`: resultado JUnit dos 81 casos.
+- `test-results/entrega3-vitor/coverage.xml`: cobertura de linhas de `app/`.
+- `test-results/entrega3-vitor/conferencia-documental.txt`: conferência adicional
+  de contratos, exemplos e documentação.
+
+Esses arquivos são locais e ignorados pelo Git. O resultado resumido permanece
+versionado neste documento; os relatórios da CI são publicados como artefatos.
+
+Cobertura local: **135/148 instruções, 91% arredondados no terminal**. Não foi
+habilitada medição de branches nem instrumentação adicional de subprocessos.
+Não há cobertura medida de `app/crud.py` nas linhas 21–23, 50–52 e 65–67
+(rollback por falha de commit), nem de `app/database.py` nas linhas 63–67
+(`get_db`, substituído por override nos testes HTTP desta execução).
+Isso limita a interpretação da cobertura; não demonstra defeito nesses caminhos.
+
+### Conferência adicional da documentação
+
+Foi conferido o conjunto de quatro operações e seus códigos HTTP no OpenAPI
+gerado contra `docs/openapi.json`, além dos exemplos de requisição do As-Built
+contra o TestClient com SQLite temporário. A normalização do título, a conclusão
+sem reabertura, os erros e o DELETE sem corpo também foram conferidos.
+É uma verificação documental adicional; não foi acrescentada à contagem dos 81
+testes e não representa teste automatizado de Swagger existente na suíte.
+
+PATCH/DELETE já declaram `404` no OpenAPI gerado. Os schemas gerados ainda não
+expressam todos os validadores personalizados; não se afirma igualdade integral
+com o contrato estático.
+
+### CI e Docker da base integrada
+
+Execução pública consultada:
+[GitHub Actions 40586231416](https://github.com/gabrielavieirab/tarefas-api/actions/runs/40586231416),
+da `develop`, commit `668faae7bdc54024c1b7c75ca483aa9adfe21d8d`.
+Estado `completed`, conclusão `success`. O
+[job 122478212824](https://github.com/gabrielavieirab/tarefas-api/actions/runs/40586231416/job/122478212824)
+registrou sucesso nos passos de instalação, `pip check`, testes no Python,
+build da imagem, testes Docker e publicação dos resultados.
+
+O workflow gera `pytest.xml`, `docker.xml`, `coverage.xml` e
+`coverage-docker.xml`, no artefato `resultados-testes`. A consulta aos passos
+confirma a execução da base; não foi usada para inferir um percentual remoto.
+Os 91% acima são da execução local. A CI de um futuro PR documental deve ser
+conferida separadamente, no respectivo commit.
+
+Docker não está disponível neste ambiente local. Não houve build local nem
+validação operacional da recriação de container com volume. Esse cenário não é
+executado pelo workflow atual e segue para conferência de Caike/equipe.
+
+Os registros históricos abaixo preservam as situações e resultados de cada data.
+
 ## Atualização da entrega 2 - 15/10/2026
 
 ### Base e execução local
