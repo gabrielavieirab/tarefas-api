@@ -5,6 +5,10 @@ Atualização: **27/10/2026**. Branch: `codex/documentacao-entrega3`, baseada na
 `develop` em `668faae`. A implementação conferida já incorpora as auditorias
 dos PRs #26/#29, a cobertura de `5c252e7` e a base documental do PR #30 de Gabriela.
 
+Publicação: [PR #31 para develop](https://github.com/gabrielavieirab/tarefas-api/pull/31).
+Os [checks do PR](https://github.com/gabrielavieirab/tarefas-api/pull/31/checks)
+registram a validação da própria contribuição, separadamente da CI da base.
+
 ## Materiais entregues para revisão
 
 - [Especificação As-Built](especificacao-as-built.md): arquitetura, rotas,
@@ -71,6 +75,7 @@ destes dados, as figuras e os links antes de registrar a revisão técnica final
 - [x] Testes e cobertura executados; origem e limites registrados.
 - [x] Parecer técnico dos documentos preparado para a consolidação.
 - [x] Roteiro da participação de Vitor no vídeo preparado.
+- [x] Branch publicada e PR #31 aberto para `develop`.
 - [ ] Revisão dos colegas registrada no PR e contribuição integrada em `develop`.
 - [ ] PDF final de Gabriela recebido e revisado tecnicamente.
 - [ ] Participação no vídeo gravada e conferida pela equipe.

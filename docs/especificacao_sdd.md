@@ -14,6 +14,7 @@ schemas, decisões, diferenças do planejamento e limites da versão implementad
 
 **Rastreabilidade:** [Issue #1](https://github.com/gabrielavieirab/tarefas-api/issues/1).
 Consolidação da entrega 2: [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22).
+Consolidação As-Built: [PR #31](https://github.com/gabrielavieirab/tarefas-api/pull/31).
 
 ## 1. Problema e objetivo
 
