@@ -236,7 +236,8 @@ conferidos e o [roteiro de vídeo](roteiro-demonstracao-arquitetura.md). Disting
 1.1.0, pacote 0.1.0 e Release prevista v1.0.0. **Impacto:** consolidação
 da documentação de encerramento. **Limite:** o PDF final ainda não foi fornecido
 para inspeção e o roteiro não equivale a uma gravação realizada. Revisão humana
-do PR, conferência do PDF e participação no vídeo continuam no checklist.
+do PR e conferência do PDF continuam pendentes. O roteiro técnico apoia a
+gravação integral do vídeo por Gabriela, conforme a organização atual da equipe.
 
 ## Como registrar os próximos ajustes
 

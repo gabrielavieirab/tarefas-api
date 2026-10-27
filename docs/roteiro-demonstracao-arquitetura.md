@@ -1,7 +1,8 @@
 # Roteiro de demonstração — arquitetura e documentação
 
-Objetivo: apresentar arquitetura e documentação em **45 a 60 segundos**, dentro
-do vídeo de 3 a 5 minutos da equipe. A gravação ainda precisa ser realizada.
+Material de apoio para a **gravação integral do vídeo por Gabriela**.
+Este roteiro cobre o bloco de arquitetura e documentação, com duração estimada
+de **45 a 60 segundos**, dentro do vídeo de 3 a 5 minutos da equipe.
 
 ## Preparação
 
@@ -9,6 +10,10 @@ Deixar abertos o README, o diagrama em `docs/arquitetura.md` e o Swagger em
 `http://127.0.0.1:8000/docs`, com a aplicação em execução. Abrir a versão do
 projeto escolhida pela equipe para a gravação. Não é necessário alterar o banco
 durante esta etapa; as operações serão apresentadas na demonstração funcional.
+
+A mesma apresentadora conduz a abertura, este bloco técnico, a demonstração
+funcional, a execução dos testes e o encerramento. A transição entre os blocos
+é feita pela mudança de tela, mantendo a narração contínua.
 
 ## Fala sugerida
 
@@ -28,6 +33,8 @@ O As-Built registra o que foi implementado, os códigos HTTP, as decisões técn
 e as limitações conhecidas, mantendo a documentação alinhada ao código.”
 
 ## Sequência de tela
+
+Os tempos abaixo são relativos ao início deste bloco técnico.
 
 1. **0 a 12 segundos:** README, comandos e links da documentação.
 2. **12 a 30 segundos:** diagrama e caminho FastAPI → validação → CRUD → SQLite.

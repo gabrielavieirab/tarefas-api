@@ -62,6 +62,7 @@ resultados, distinguindo aprovação dos testes de cobertura do código.
 - Conferir a correspondência da documentação com o commit final da Release na `main`.
 - Revisar o PDF de encerramento quando a versão consolidada estiver disponível,
   verificando dados técnicos, figuras e links de Release, vídeo e resultados.
-- Gravar e conferir a demonstração da arquitetura conforme o roteiro.
 
 A versão final do PDF ainda não foi inspecionada nesta revisão.
+A gravação integral e a publicação do vídeo ficam com Gabriela, com apoio do
+[roteiro técnico](roteiro-demonstracao-arquitetura.md).

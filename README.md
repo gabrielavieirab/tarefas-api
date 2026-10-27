@@ -32,8 +32,8 @@ esta conferência não substitui o fechamento e a aprovação da equipe.
 
 - **Vitor de Assis Patricio Borges - RA 22304737:** especificação, README,
   arquitetura final, As-Built, ADRs e revisão técnica do PDF.
-- **Gabriela Vieira Baptista - RA 22510133:** coordenação, Release, vídeo,
-  relatório/PDF e submissão final.
+- **Gabriela Vieira Baptista - RA 22510133:** coordenação, Release, gravação
+  integral do vídeo, relatório/PDF e submissão final.
 - **Felipe Domingos Ribeiro Pereira - RA 22604250:** auditoria da implementação,
   correções e testes.
 - **Caike Ribeiro Menezes - RA 22601978:** Docker, CI, cobertura e evidências.
