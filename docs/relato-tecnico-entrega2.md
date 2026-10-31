@@ -1,17 +1,16 @@
-# Relato técnico da contribuição de Vitor
+# Relato técnico — evolução da especificação
 
-Vitor de Assis Patricio Borges - RA 22304737. Entrega 2, 15/10/2026.
+Registro histórico da entrega 2, de 15/10/2026.
 Texto preparado a partir dos documentos, commits e execuções do projeto para
 compor a seção de comunicação técnica do relatório consolidado.
 
 ## Desenvolvimento e colaboração
 
-A contribuição de Vitor começou pela especificação do comportamento da API:
+A especificação definiu o comportamento da API:
 quatro operações HTTP, uma lista compartilhada e tarefas com `id`, `titulo`
 e `concluida`. O trabalho detalhou entradas válidas, retornos de erro,
 persistência e critérios de aceitação antes da integração da aplicação.
-Isso forneceu uma referência comum para a implementação de Felipe e para os
-testes e o ambiente preparados por Caike. A especificação foi integrada pelo
+Isso forneceu uma referência comum para a implementação, os testes e o ambiente. A especificação foi integrada pelo
 [PR #12](https://github.com/gabrielavieirab/tarefas-api/pull/12), a aplicação
 pelo [PR #14](https://github.com/gabrielavieirab/tarefas-api/pull/14) e os testes
 e o ambiente pelo [PR #15](https://github.com/gabrielavieirab/tarefas-api/pull/15).
@@ -61,7 +60,7 @@ Nesta atualização, o Codex no aplicativo desktop apoiou a leitura dos materiai
 a conferência do repositório, a redação técnica e a execução de verificações.
 As evidências são os arquivos produzidos, o diff e os resultados de comandos;
 não foi feita medição de economia de tempo nem comparação experimental entre
-ferramentas. A [revisão da análise de IA](revisao_ia_vitor.md) registra essa
+ferramentas. A [revisão da análise de IA](revisao-analise-ia.md) registra essa
 contribuição e os pontos que ainda precisam ser consolidados pela equipe.
 
 A experiência técnica descrita sustenta um fluxo em que a especificação orienta
@@ -72,7 +71,7 @@ final são etapas distintas da preparação desta contribuição.
 
 ## Evidências para a consolidação
 
-- [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22): escopo da documentação de Vitor.
+- [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22): escopo da documentação técnica.
 - [PR #25](https://github.com/gabrielavieirab/tarefas-api/pull/25): publicação desta contribuição para revisão.
 - [Critérios de aceitação](criterios_aceitacao.md): relação entre regras e cenários.
 - [Refinamentos](refinamentos.md): evolução e decisões rastreadas.

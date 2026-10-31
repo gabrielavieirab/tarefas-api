@@ -1,10 +1,18 @@
 # Registro de refinamentos da especificação
 
-Contrato atual: 1.1.0, de 05/09/2026. Atualização documental: 15/10/2026.
+Contrato atual: 1.1.0, de 05/09/2026. Atualização documental: 27/10/2026.
 Os registros diferenciam evolução de regras, integração de código e correção
-de documentação; a consolidação da entrega 2 não muda o comportamento da API.
+de documentação; a consolidação As-Built não muda o comportamento da API.
 
-## Estado da revisão
+## Estado da Entrega Final — 27/10/2026
+
+Base conferida: `develop` em `668faae`, após integração dos PRs #26, #29 e #30
+e da cobertura no commit `5c252e7`. A revisão documental completa o As-Built
+e atualiza SDD, ADRs, diagrama e README.
+O [guia da entrega](validacao-tecnica-final.md) reúne os materiais e as pendências reais.
+As entradas anteriores preservam o estado e as evidências de suas datas.
+
+## Estado da revisão em 15/10/2026
 
 A especificação da [Issue #1](https://github.com/gabrielavieirab/tarefas-api/issues/1)
 foi integrada pelo [PR #12](https://github.com/gabrielavieirab/tarefas-api/pull/12).
@@ -162,8 +170,8 @@ na comparação de ferramentas e problemas de formatação Markdown.
 **Decisão:** preparar um relato técnico apoiado no histórico e registrar uma
 revisão assistida da versão `bed7795`, incluindo fatos observados na contribuição
 de Vitor. Não preencher experiências dos colegas nem declarar aprovação humana
-da versão final. **Impacto:** [relato técnico](relato_experiencia_vitor.md),
-[parecer da análise de IA](revisao_ia_vitor.md), README e guia da contribuição.
+da versão final. **Impacto:** [relato técnico](relato-tecnico-entrega2.md),
+[parecer da análise de IA](revisao-analise-ia.md), README e guia da contribuição.
 **Evidência:** fontes e trechos identificados no parecer. A matriz final e o PDF
 continuam sob consolidação de Gabriela; as regras da API não mudam.
 
@@ -191,6 +199,43 @@ sem alteração de comportamento ou do contrato OpenAPI.
 da explicação com `app/crud.py`; `.\.venv\Scripts\python.exe -m pytest tests -q`
 em 16/10/2026: `80 passed, 1 warning in 9.78s`. O aviso é de descontinuação
 do TestClient. A aprovação do colega permanece pendente.
+
+## Consolidação As-Built — 27/10/2026
+
+**REF-15 - Atualizar a documentação para a base após as auditorias.**
+
+**Origem:** divisão da Entrega Final e código integrado na
+`develop` em `668faae`. **Constatação:** documentos de 15/10 ainda descreviam
+80 testes, ausência de 404 no OpenAPI e CI sem cobertura. O As-Built iniciado
+no [PR #30](https://github.com/gabrielavieirab/tarefas-api/pull/30) terminava no
+comando de instalação, com bloco de código aberto e marcadores escapados.
+
+**Decisão:** completar esse mesmo As-Built; atualizar SDD, ADRs, arquitetura,
+README, critérios e descrição de contexto do OpenAPI estático. Preservar o
+contrato 1.1.0 e reconhecer as correções já integradas nos PRs #26/#29 e no
+commit `5c252e7`. **Impacto:** RNF-06/RNF-07; nenhuma alteração de regras,
+schemas executáveis, testes ou infraestrutura. **Verificação:** leitura dos
+módulos e do workflow, conferência dos exemplos/códigos HTTP e `git diff`.
+
+**REF-16 - Registrar cobertura com origem e limites.**
+
+**Constatação:** aprovação de todos os testes não equivale a 100% de cobertura.
+**Decisão:** registrar 81 testes aprovados e cobertura local de 91% (135/148
+instruções) em Python 3.12.6, separadamente da execução Docker/CI em 3.12.10.
+Explicitar `pytest-cov` sem pin, ausência de lock/digest e os caminhos sem
+cobertura medida. **Verificação:** `pip check` aprovado, suíte com cobertura
+em 27/10/2026 e
+[CI 40586231416](https://github.com/gabrielavieirab/tarefas-api/actions/runs/40586231416)
+da base integrada concluída com sucesso. Comandos e limites nas
+[evidências](evidencias_testes.md#entrega-final--27102026).
+
+**REF-17 - Preparar a comunicação técnica final.**
+
+**Decisão:** registrar a [validação técnica](validacao-tecnica-final.md) dos documentos
+conferidos. Distinguir contrato 1.1.0, pacote 0.1.0 e Release prevista v1.0.0.
+**Impacto:** consolidação da documentação de encerramento. **Limite:** o PDF final
+ainda não foi fornecido para inspeção. Revisão humana do PR e conferência do PDF
+continuam pendentes. A gravação integral do vídeo fica com Gabriela.
 
 ## Como registrar os próximos ajustes
 
