@@ -11,7 +11,7 @@ from sqlalchemy.orm import Session
 
 from app import crud
 from app.database import get_db
-from app.schemas import TarefaAtualizar, TarefaCreate, TarefaRead
+from app.schemas import TarefaAtualizar, TarefaCreate, TarefaNaoEncontrada, TarefaRead
 
 router = APIRouter(tags=["Tarefas"])
 
@@ -23,7 +23,9 @@ _ID_TAREFA = Path(
     description="Inteiro positivo de 64 bits.",
 )
 
-_TAREFA_NAO_ENCONTRADA = "Tarefa não encontrada."
+# Mensagem única, lida do próprio schema do erro 404 (schemas.py) para que
+# a documentação automática e o corpo de resposta real nunca divirjam.
+_TAREFA_NAO_ENCONTRADA = TarefaNaoEncontrada.model_fields["detail"].default
 
 
 @router.post(
@@ -49,6 +51,12 @@ def listar_tarefas(sessao: Session = Depends(get_db)) -> list[TarefaRead]:
     "/tarefas/{id}",
     response_model=TarefaRead,
     summary="Editar o texto e/ou concluir uma tarefa",
+    responses={
+        404: {
+            "model": TarefaNaoEncontrada,
+            "description": "ID válido (inteiro positivo), mas sem tarefa correspondente.",
+        },
+    },
 )
 def atualizar_tarefa(
     dados: TarefaAtualizar,
@@ -66,6 +74,12 @@ def atualizar_tarefa(
     "/tarefas/{id}",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Excluir uma tarefa",
+    responses={
+        404: {
+            "model": TarefaNaoEncontrada,
+            "description": "ID válido (inteiro positivo), mas sem tarefa correspondente.",
+        },
+    },
 )
 def excluir_tarefa(id: int = _ID_TAREFA, sessao: Session = Depends(get_db)) -> None:
     se_excluiu = crud.excluir_tarefa(sessao, id)

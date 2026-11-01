@@ -1,12 +1,18 @@
-# Especificação SDD - API de lista de tarefas
+# Especificação SDD — contrato implementado da API de tarefas
 
-Eu, Vitor (@vitorborges10), sou o responsável por esta especificação.
+**Versão do contrato:** 1.1.0, de 05/09/2026.
+**Atualização documental:** 27/10/2026, para a Entrega Final.
 
-**Versão:** 1.1.0. **Data:** 05/09/2026.
-
-**Estado:** proposta técnica pronta para revisão por Felipe e Caike.
+**Estado As-Built:** contrato conferido na `develop` em `668faae`, após auditoria,
+atualização de cobertura e integração do PR #30. A suíte local passou com
+81 testes; os resultados e limites estão em [Evidências](evidencias_testes.md).
+Não há alteração de comportamento nesta atualização. A
+[especificação As-Built](especificacao-as-built.md) consolida arquitetura,
+schemas, decisões, diferenças do planejamento e limites da versão implementada.
 
 **Rastreabilidade:** [Issue #1](https://github.com/gabrielavieirab/tarefas-api/issues/1).
+Consolidação da entrega 2: [Issue #22](https://github.com/gabrielavieirab/tarefas-api/issues/22).
+Consolidação As-Built: [PR #31](https://github.com/gabrielavieirab/tarefas-api/pull/31).
 
 ## 1. Problema e objetivo
 
@@ -23,7 +29,7 @@ implementar, testar e revisar colaborativamente.
 SDD (Spec-Driven Development) significa que o comportamento é descrito e revisado
 antes de orientar a geração de código, a implementação e os testes.
 
-## 2. Escopo da entrega inicial
+## 2. Escopo funcional mantido na Entrega Final
 
 Inclui exatamente quatro operações HTTP: cadastrar, listar, atualizar e excluir
 tarefas. A atualização permite editar o texto (`titulo`), marcar como concluída
@@ -37,21 +43,27 @@ consulta individual por GET, relacionamentos e cálculos. A página de documenta
 automática do FastAPI é uma ferramenta de apoio, não uma quinta operação de negócio.
 
 O fluxo de GitHub, as instruções de IA, o ambiente, a suíte e as evidências continuam
-fazendo parte da entrega do grupo. As três entregas da disciplina serão tratadas
-por etapas; esta especificação cobre apenas a inicial.
+fazendo parte da entrega do grupo. A Entrega Final consolida a auditoria,
+a cobertura, o As-Built e a preparação do relatório, do vídeo e da Release.
+O contrato funcional permanece o da versão 1.1.0; esses trabalhos não acrescentam
+rotas, campos ou regras de negócio.
 
 ## 3. Tecnologias e decisões
 
-Adotar Python 3.12, FastAPI, Pydantic 2, Uvicorn, SQLAlchemy 2 e SQLite, com acesso
-síncrono ao banco. Para validação, usar pytest, TestClient do FastAPI e HTTPX.
-Padronizar o ambiente com `venv`/pip, `pyproject.toml` e Docker; executar a suíte
-também no GitHub Actions.
+A implementação utiliza Python 3.12, FastAPI, Pydantic 2, Uvicorn, SQLAlchemy 2
+e SQLite, com acesso síncrono ao banco. Os testes usam pytest, TestClient do
+FastAPI e HTTPX. O ambiente usa `venv`/pip, `pyproject.toml` e Docker; a suíte
+também é executada no GitHub Actions.
 
-As versões exatas compatíveis das dependências e a imagem do container devem ser
-fixadas por Caike após a primeira execução integrada, seguindo o
-[ADR-004](decisoes_tecnicas.md). Esta proposta define
-a linha de tecnologias; não afirma que um conjunto de pacotes já foi instalado
-ou validado na aplicação.
+As dependências principais com versão fixa em `pyproject.toml` são FastAPI 0.141.1,
+Uvicorn 0.52.4, Pydantic 2.13.5, SQLAlchemy 2.0.52, pytest 9.1.1 e HTTPX 0.28.1.
+`pytest-cov` foi acrescentado ao extra `test` sem versão fixada. O Docker usa
+`python:3.12.10-slim` e o CI configura Python 3.12.10. A medição local de
+27/10/2026 foi de 91% de cobertura de linhas de `app/`, com Python 3.12.6.
+Ainda não há lock das dependências transitivas nem digest da imagem; o
+[ADR-004](decisoes_tecnicas.md) registra esse limite da reprodução do ambiente.
+As execuções efetivamente realizadas estão em
+[Evidências de testes e CI](evidencias_testes.md).
 
 As justificativas e a decomposição dos componentes estão em
 [Decisões técnicas](decisoes_tecnicas.md).
@@ -159,8 +171,8 @@ A validação do limite do título é responsabilidade da aplicação: declarar 
 
 ## 8. Contratos HTTP
 
-Endereço local previsto: `http://127.0.0.1:8000`. Esta é uma convenção para a
-configuração futura, não a indicação de um serviço atualmente em execução.
+Endereço local: `http://127.0.0.1:8000`, após iniciar a aplicação com os comandos
+do [README](../README.md). A documentação Swagger fica em `/docs`.
 As rotas canônicas não têm barra final.
 
 ### POST /tarefas
@@ -283,10 +295,25 @@ Falhas inesperadas não devem ser convertidas em sucesso nem expor detalhes do b
 ## 9. Critérios de aceitação e evolução
 
 [Critérios de aceitação](criterios_aceitacao.md) relaciona cada cenário ao requisito
-ou regra correspondente. Caike implementará os testes; Felipe usará os mesmos
-critérios para a API. A especificação e [OpenAPI](openapi.json) devem ser alterados
-no mesmo PR sempre que um contrato mudar.
+ou regra correspondente. A implementação está em `app/` e a suíte oficial
+em `tests/`. Esses componentes foram integrados pelos
+[PRs #14](https://github.com/gabrielavieirab/tarefas-api/pull/14) e
+[#15](https://github.com/gabrielavieirab/tarefas-api/pull/15).
+A especificação e [OpenAPI estático](openapi.json) devem ser alterados
+no mesmo PR sempre que um contrato mudar. A atualização de 27/10/2026 mantém
+as regras e os 31 critérios de aceitação existentes. O teste explícito de PATCH
+com `{}` foi integrado pelo PR #26, elevando a suíte de 80 para 81 casos.
 
 Revisões do grupo e resultados reais dos testes devem ser registrados em
 [Refinamentos](refinamentos.md), com motivo, impacto e link da evidência.
-Esta versão não declara aprovação dos colegas nem execução da suíte da API.
+O relatório de [testes e CI](evidencias_testes.md) distingue as execuções locais
+por data, as execuções públicas das bases integradas e as limitações operacionais.
+
+**Limitação de documentação automática:** `/openapi.json` é gerado pelo FastAPI
+a partir dos esquemas e rotas. Validadores personalizados aplicam normalização,
+limite do título, proibição de `null`, conclusão apenas com `true` e PATCH não
+vazio, mas esses detalhes não são todos expressos no esquema gerado. As respostas
+404 de PATCH/DELETE já foram declaradas pelo PR #26. O contrato estático preserva
+as regras detalhadas; completar os demais metadados da documentação automática
+permanece uma pendência do RNF-07. A conferência dos códigos HTTP do OpenAPI é
+uma verificação documental adicional, distinta dos 81 testes automatizados.

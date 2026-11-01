@@ -18,6 +18,7 @@ dependencies = [
 test = [
     "pytest==9.1.1",
     "httpx==0.28.1",
+    "pytest-cov",
 ]
 
 [tool.setuptools.packages.find]

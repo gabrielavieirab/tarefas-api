@@ -11,3 +11,8 @@ tarefas.db
 test-results/
 build/
 dist/
+
+# Relatórios de cobertura de testes
+.coverage
+.coverage.*
+htmlcov/

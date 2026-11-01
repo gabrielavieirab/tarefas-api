@@ -1,0 +1,15 @@
+flowchart TD
+    Cliente["Cliente HTTP / Swagger"] --> API["FastAPI - app/main.py"]
+    API --> Validacao["FastAPI / Pydantic - ID e corpo"]
+    Validacao -->|Entrada invalida| Erro422["HTTP 422 - sem alterar registros"]
+    Validacao -->|Entrada valida| Rotas["app/routes.py - quatro operacoes"]
+    Config["app/database.py - engine e get_db"] -. Sessao por requisicao .-> Rotas
+    Rotas --> CRUD["app/crud.py - consultas e transacoes"]
+    CRUD --> ORM["SQLAlchemy - Session"]
+    Modelo["app/models.py - Tarefa"] -. Mapeamento .-> ORM
+    ORM <--> Banco[("SQLite - tabela tarefas")]
+    CRUD -->|Registro ou lista| Saida["TarefaRead - HTTP 201 ou 200 com JSON"]
+    CRUD -->|ID ausente em PATCH ou DELETE| Erro404["Rota retorna HTTP 404"]
+    CRUD -->|Exclusao confirmada| SemCorpo["Rota retorna HTTP 204 sem corpo"]
+    API -. Lifespan chama init_db .-> Config
+    Config -. create_all na inicializacao .-> Banco
